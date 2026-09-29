@@ -1,0 +1,3856 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-aQlChaT0EFlGvEe/FZxr/9W2o9apUIPZtfiFokpzyZ0='; style-src 'unsafe-inline'; img-src https://*.mzstatic.com data:; connect-src https://itunes.apple.com https://script.google.com https://script.googleusercontent.com; worker-src blob:; child-src blob:; frame-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta name="referrer" content="no-referrer">
+  <meta name="color-scheme" content="light dark">
+  <title>Libertyscan · Which of your apps survive a move</title>
+  <meta name="description" content="Find out which of your iPhone and Mac apps you could still update and reinstall after moving your Apple Account to another country.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%233b3fd8'/%3E%3Cpath d='M11 8v16h11' stroke='white' stroke-width='3.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <style>
+/* Libertyscan: one stylesheet, system fonts, no external requests. */
+
+:root {
+  color-scheme: light dark;
+  --bg: #f6f5f1;
+  --surface: #ffffff;
+  --surface-sunk: #efeee8;
+  --text: #1d1d21;
+  --text-2: #55555e;
+  --text-3: #83838d;
+  --line: #e3e1d9;
+  --line-strong: #cdcac0;
+  --accent: #3b3fd8;
+  --accent-ink: #ffffff;
+  --accent-soft: #ebebfc;
+  --lost: #b13d18;
+  --lost-soft: #fbece5;
+  --ok: #1b774a;
+  --ok-soft: #e3f2e9;
+  --grey: #8a8a93;
+  --raised: #ffffff;
+  --icon-ring: rgba(20, 20, 30, 0.1);
+  --radius: 16px;
+  --radius-sm: 10px;
+  --shadow: 0 1px 2px rgba(20, 20, 30, 0.05), 0 6px 20px rgba(20, 20, 30, 0.05);
+  --font: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #111114;
+    --surface: #1a1a1f;
+    --surface-sunk: #151519;
+    --text: #ececf1;
+    --text-2: #aaaab4;
+    --text-3: #7c7c87;
+    --line: #2a2a32;
+    --line-strong: #3b3b45;
+    --accent: #a4a7ff;
+    --accent-ink: #14142b;
+    --accent-soft: #24254b;
+    --lost: #ff9167;
+    --lost-soft: #3a2018;
+    --ok: #6cd4a0;
+    --ok-soft: #15301f;
+    --grey: #7c7c87;
+    --raised: #2e2e37;
+    --icon-ring: rgba(255, 255, 255, 0.1);
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 16px/1.5 var(--font);
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+input,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+a {
+  color: var(--accent);
+}
+
+:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--accent) 55%, transparent);
+  outline-offset: 2px;
+}
+
+.wrap {
+  width: 100%;
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.skip {
+  position: absolute;
+  left: 12px;
+  top: -48px;
+  padding: 8px 12px;
+  background: var(--surface);
+  border-radius: var(--radius-sm);
+  z-index: 10;
+}
+
+.skip:focus {
+  top: 12px;
+}
+
+/* ---------- top bar ---------- */
+
+.topbar {
+  border-bottom: 1px solid var(--line);
+  background: color-mix(in srgb, var(--bg) 85%, transparent);
+}
+
+.topbar__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 60px;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.brand__mark {
+  width: 22px;
+  height: 22px;
+  border-radius: 7px;
+  background: var(--accent);
+  box-shadow: inset 0 0 0 5px var(--accent), inset 0 0 0 7px var(--accent-ink);
+}
+
+.badge {
+  font-size: 13px;
+  color: var(--text-2);
+  background: var(--surface-sunk);
+  border: 1px solid var(--line);
+  padding: 3px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.main {
+  padding-top: 40px;
+  padding-bottom: 96px;
+}
+
+.boot {
+  color: var(--text-3);
+}
+
+/* ---------- type ---------- */
+
+.title {
+  margin: 0 0 12px;
+  font-size: clamp(28px, 5vw, 38px);
+  line-height: 1.12;
+  letter-spacing: -0.025em;
+  font-weight: 700;
+}
+
+.title:focus {
+  outline: none;
+}
+
+.lede {
+  margin: 0;
+  max-width: 60ch;
+  font-size: 18px;
+  color: var(--text-2);
+}
+
+.muted {
+  color: var(--text-3);
+}
+
+/* ---------- pick screen ---------- */
+
+.intro {
+  margin-bottom: 28px;
+}
+
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  box-shadow: var(--shadow);
+  margin-bottom: 28px;
+}
+
+.panel p {
+  margin: 0;
+}
+
+.panel__stat {
+  font-size: 18px;
+}
+
+.panel__line {
+  color: var(--text-2);
+}
+
+.panel__note {
+  margin-top: 10px !important;
+  padding-top: 10px;
+  border-top: 1px dashed var(--line);
+  font-size: 14px;
+  color: var(--text-3);
+}
+
+.pick {
+  display: grid;
+  gap: 24px;
+}
+
+.field {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+
+.field__label {
+  display: block;
+  padding: 0;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-2);
+}
+
+.field__hint {
+  margin: 6px 0 0;
+  font-size: 13px;
+  color: var(--text-3);
+}
+
+.select {
+  appearance: none;
+  -webkit-appearance: none;
+  min-width: 220px;
+  padding: 10px 40px 10px 14px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' stroke='%2383838d' stroke-width='1.8' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
+      no-repeat right 14px center,
+    var(--surface);
+  cursor: pointer;
+}
+
+.select--small {
+  min-width: 0;
+  padding-top: 7px;
+  padding-bottom: 7px;
+  font-size: 14px;
+}
+
+.choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.choice {
+  padding: 12px 18px;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: var(--surface);
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.choice:hover:not(:disabled) {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.choice:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* ---------- results: head ---------- */
+
+.head {
+  margin-bottom: 20px;
+}
+
+.route {
+  display: grid;
+  gap: 18px;
+  margin: 20px 0;
+}
+
+.field--from {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 12px;
+}
+
+.field--from .field__label,
+.field--from .field__hint {
+  margin: 0;
+}
+
+.destinations {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 8px;
+}
+
+.dest {
+  display: grid;
+  align-content: start;
+  gap: 1px;
+  min-width: 0;
+  padding: 9px 14px;
+  text-align: left;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+}
+
+.dest:hover {
+  border-color: var(--accent);
+}
+
+.dest.is-selected {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  box-shadow: inset 0 0 0 1px var(--accent);
+}
+
+.dest__name {
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.dest__figure {
+  font-size: 13px;
+  color: var(--text-3);
+  font-variant-numeric: tabular-nums;
+}
+
+.dest.is-lossy .dest__figure {
+  color: var(--lost);
+}
+
+.dest.is-clear .dest__figure {
+  color: var(--ok);
+}
+
+.dest__figure.is-loading::before {
+  content: "";
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  margin-right: 6px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  vertical-align: -1px;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* segmented control */
+
+.seg {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  padding: 3px;
+  border-radius: 999px;
+  background: var(--surface-sunk);
+  border: 1px solid var(--line);
+}
+
+.seg__btn {
+  border: 0;
+  background: transparent;
+  padding: 7px 14px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-2);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.seg__btn[aria-pressed="true"] {
+  background: var(--raised);
+  color: var(--text);
+  box-shadow: 0 1px 2px rgba(20, 20, 30, 0.12);
+}
+
+.seg__btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.seg__n {
+  font-weight: 500;
+  color: var(--text-3);
+  font-variant-numeric: tabular-nums;
+  margin-left: 2px;
+}
+
+.seg--small .seg__btn {
+  padding: 5px 12px;
+  font-size: 13px;
+}
+
+/* ---------- verdict ---------- */
+
+.verdict-area {
+  margin-bottom: 16px;
+}
+
+.verdict {
+  position: relative;
+  padding: 24px 26px 22px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.verdict::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 5px;
+  background: var(--line-strong);
+}
+
+.verdict--lost::before {
+  background: var(--lost);
+}
+
+.verdict--ok::before {
+  background: var(--ok);
+}
+
+.verdict--error::before {
+  background: var(--lost);
+}
+
+.verdict--loading::before {
+  background: var(--accent);
+}
+
+.verdict p {
+  margin: 0;
+}
+
+.verdict__headline {
+  font-size: clamp(22px, 3.6vw, 30px);
+  line-height: 1.22;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+  max-width: 30ch;
+}
+
+.verdict--loading .verdict__headline {
+  font-size: 20px;
+  font-weight: 600;
+  max-width: none;
+}
+
+.verdict__figure {
+  color: var(--lost);
+  font-weight: 750;
+}
+
+.verdict__line {
+  margin-top: 12px !important;
+  color: var(--text-2);
+}
+
+.verdict__stamp {
+  margin-top: 16px !important;
+  font-size: 13px;
+  color: var(--text-3);
+}
+
+.verdict .button {
+  margin-top: 16px;
+}
+
+.verdict__more > summary {
+  display: block;
+  margin-top: 12px;
+  color: var(--text-2);
+  cursor: pointer;
+  list-style: none;
+  text-decoration: underline;
+  text-decoration-color: var(--line-strong);
+  text-underline-offset: 3px;
+}
+
+.verdict__more > summary::-webkit-details-marker {
+  display: none;
+}
+
+.plans {
+  max-width: 560px;
+  margin: 10px 0 0;
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  background: var(--surface-sunk);
+  list-style: none;
+  font-size: 14px;
+}
+
+.plans__item {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 4px 12px;
+  padding: 6px 0;
+}
+
+.plans__item + .plans__item {
+  border-top: 1px solid var(--line);
+}
+
+.plans__app {
+  color: var(--text-3);
+}
+
+/* Subscription badges: on the plan list and on an app's row, whatever its section. */
+.tag {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 1px 9px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.6;
+  vertical-align: 1px;
+  white-space: nowrap;
+}
+
+.plans .tag {
+  margin-left: 0;
+}
+
+.tag--renewing {
+  background: var(--lost-soft);
+  color: var(--lost);
+}
+
+.tag--maybe {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.linkish {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--grey);
+  text-align: left;
+  text-decoration: underline;
+  text-decoration-color: var(--line-strong);
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.linkish:hover {
+  color: var(--text-2);
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 18px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.progress {
+  display: block;
+  width: 100%;
+  height: 6px;
+  margin-top: 16px;
+  border: 0;
+  border-radius: 999px;
+  overflow: hidden;
+  appearance: none;
+  -webkit-appearance: none;
+  background: var(--surface-sunk);
+  accent-color: var(--accent);
+}
+
+.progress::-webkit-progress-bar {
+  background: var(--surface-sunk);
+}
+
+.progress::-webkit-progress-value {
+  background: var(--accent);
+  border-radius: 999px;
+}
+
+.progress::-moz-progress-bar {
+  background: var(--accent);
+  border-radius: 999px;
+}
+
+/* ---------- explainer ---------- */
+
+.explain {
+  margin: 0 0 28px;
+  padding: 0 4px;
+}
+
+.explain__summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--accent);
+  cursor: pointer;
+  list-style: none;
+}
+
+.explain__summary::-webkit-details-marker,
+.group__summary::-webkit-details-marker {
+  display: none;
+}
+
+.explain__summary::before,
+.group__summary::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(-45deg);
+  transition: transform 0.15s;
+  flex: none;
+}
+
+.explain[open] .explain__summary::before,
+.group[open] > .group__summary::before {
+  transform: rotate(45deg);
+}
+
+.explain__body {
+  max-width: 64ch;
+  margin-top: 10px;
+  padding: 14px 18px;
+  border-radius: var(--radius-sm);
+  background: var(--surface-sunk);
+  color: var(--text-2);
+  font-size: 15px;
+}
+
+.explain__body p {
+  margin: 0 0 8px;
+}
+
+.explain__body p:last-child {
+  margin: 0;
+}
+
+/* ---------- toolbar ---------- */
+
+.toolbar {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--line);
+}
+
+.toolbar > .seg {
+  justify-self: start;
+}
+
+.toolbar__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.search {
+  flex: 1 1 220px;
+}
+
+.search__input {
+  width: 100%;
+  padding: 8px 14px;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: var(--surface);
+  font-size: 15px;
+}
+
+.search__input::placeholder {
+  color: var(--text-3);
+}
+
+/* ---------- groups ---------- */
+
+.group {
+  margin: 0 0 18px;
+}
+
+.group__title {
+  display: block;
+  margin: 0;
+  font-size: 19px;
+  letter-spacing: -0.01em;
+}
+
+.group__n {
+  margin-left: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-3);
+  font-variant-numeric: tabular-nums;
+}
+
+.group__of {
+  font-weight: 500;
+}
+
+.group__sub {
+  display: block;
+  margin: 4px 0 12px;
+  font-size: 14px;
+  color: var(--text-2);
+}
+
+.group--lost .group__title {
+  color: var(--lost);
+}
+
+.group--lost .group__n {
+  color: var(--lost);
+  opacity: 0.8;
+}
+
+.group__summary {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 12px;
+  align-items: center;
+  padding: 14px 4px;
+  cursor: pointer;
+  list-style: none;
+  border-top: 1px solid var(--line);
+}
+
+.group__summary::before {
+  grid-row: 1;
+  color: var(--text-3);
+}
+
+.group__summary .group__title {
+  grid-column: 2;
+}
+
+.group__summary .group__sub {
+  grid-column: 2;
+  margin-bottom: 0;
+}
+
+.group[open] > .group__summary {
+  margin-bottom: 10px;
+}
+
+.group--delisted .group__title,
+.group--delisted .group__sub {
+  color: var(--grey);
+}
+
+.group--delisted .apps {
+  opacity: 0.72;
+}
+
+.group--delisted .app__icon {
+  filter: grayscale(1);
+}
+
+.empty {
+  margin: 0 0 12px;
+  padding: 14px 16px;
+  border-radius: var(--radius-sm);
+  background: var(--surface-sunk);
+  color: var(--text-3);
+  font-size: 14px;
+}
+
+/* ---------- app rows ---------- */
+
+.apps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  overflow: hidden;
+}
+
+.app {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr) auto;
+  gap: 4px 14px;
+  align-items: center;
+  padding: 12px 16px;
+}
+
+.app + .app {
+  border-top: 1px solid var(--line);
+}
+
+.app__icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 9px;
+  background: var(--surface-sunk);
+  object-fit: cover;
+  /* White icons (leboncoin, Lydia) would otherwise melt into the row. */
+  outline: 1px solid var(--icon-ring);
+  outline-offset: -1px;
+}
+
+.app__icon--mac {
+  border-radius: 0;
+  background: transparent;
+  outline: none;
+}
+
+.app__icon--none {
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  color: var(--text-3);
+  outline: none;
+  border: 1px dashed var(--line-strong);
+}
+
+.app__main {
+  display: grid;
+  min-width: 0;
+}
+
+.app__name {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.app__alt {
+  font-size: 13px;
+  color: var(--text-3);
+  overflow-wrap: anywhere;
+}
+
+.app__meta {
+  display: grid;
+  justify-items: end;
+  font-size: 13px;
+  color: var(--text-2);
+  text-align: right;
+}
+
+.app__link {
+  font-weight: 500;
+  text-underline-offset: 3px;
+}
+
+/* ---------- get started ---------- */
+
+.signup {
+  display: grid;
+  gap: 8px;
+  max-width: 520px;
+}
+
+.signup__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.input {
+  flex: 1 1 240px;
+  min-width: 0;
+  padding: 10px 14px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  font-size: 17px;
+}
+
+.input[aria-invalid="true"] {
+  border-color: var(--lost);
+}
+
+.field__error {
+  margin: 0;
+  color: var(--lost);
+  font-size: 14px;
+}
+
+.signup .field__hint {
+  margin: 0;
+}
+
+/* ---------- landing, instructions, before you switch ---------- */
+
+.guide {
+  max-width: 68ch;
+}
+
+.guide__title {
+  margin: 32px 0 10px;
+  font-size: 20px;
+  letter-spacing: -0.01em;
+}
+
+.guide__title:first-child {
+  margin-top: 0;
+}
+
+.guide p {
+  margin: 0 0 12px;
+}
+
+.steps,
+.plain-list {
+  margin: 0 0 14px;
+  padding-left: 22px;
+}
+
+.steps li,
+.plain-list li {
+  margin: 6px 0;
+}
+
+.plain-list--tight {
+  margin: 6px 0 0;
+}
+
+.plain-list--tight li {
+  margin: 4px 0;
+}
+
+.notice--quiet {
+  margin: 24px 0 16px;
+  background: var(--surface-sunk);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 18px;
+  margin-top: 28px;
+}
+
+.checklist {
+  max-width: 68ch;
+  margin: 0 0 24px;
+  padding: 0;
+  list-style: none;
+  counter-reset: step;
+}
+
+.checklist__item {
+  position: relative;
+  padding: 16px 20px 16px 58px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  counter-increment: step;
+}
+
+.checklist__item + .checklist__item {
+  margin-top: 10px;
+}
+
+.checklist__item::before {
+  content: counter(step);
+  position: absolute;
+  top: 16px;
+  left: 18px;
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.checklist__item p {
+  margin: 0 0 6px;
+  color: var(--text-2);
+}
+
+.checklist__item p:last-child {
+  margin-bottom: 0;
+}
+
+.checklist__title {
+  color: var(--text) !important;
+  font-weight: 600;
+}
+
+.yours {
+  margin-top: 10px !important;
+  padding: 10px 14px;
+  border-left: 3px solid var(--accent);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  background: var(--accent-soft);
+  color: var(--text) !important;
+}
+
+.yours p {
+  margin: 0;
+  color: var(--text);
+}
+
+.next {
+  display: grid;
+  gap: 2px;
+  width: 100%;
+  margin: 16px 0 24px;
+  padding: 14px 44px 14px 20px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface)
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='14' viewBox='0 0 8 14'%3E%3Cpath d='M1 1l6 6-6 6' stroke='%2383838d' stroke-width='1.8' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
+    no-repeat right 20px center;
+  text-align: left;
+  cursor: pointer;
+}
+
+.next:hover {
+  border-color: var(--line-strong);
+}
+
+.next__title {
+  font-weight: 600;
+}
+
+.next__sub {
+  font-size: 14px;
+  color: var(--text-2);
+}
+
+/* ---------- add your file ---------- */
+
+.drop {
+  display: grid;
+  justify-items: center;
+  gap: 14px;
+  padding: 36px 20px 28px;
+  border: 2px dashed var(--line-strong);
+  border-radius: var(--radius);
+  background: var(--surface);
+  text-align: center;
+  transition: border-color 0.15s, background-color 0.15s;
+}
+
+.is-dragging .drop {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.drop__title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.drop__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+
+.drop__limit {
+  max-width: 46ch;
+  margin: 6px 0 0;
+  font-size: 14px;
+  color: var(--text-3);
+}
+
+.button--quiet {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+label.button:focus-within {
+  outline: 3px solid color-mix(in srgb, var(--accent) 55%, transparent);
+  outline-offset: 2px;
+}
+
+.aside {
+  margin: 18px 0 0;
+  color: var(--text-3);
+  font-size: 15px;
+}
+
+.notice {
+  margin-bottom: 24px;
+  padding: 16px 20px;
+  border-radius: var(--radius);
+  background: var(--lost-soft);
+  color: var(--text-2);
+}
+
+.notice p {
+  margin: 0 0 8px;
+}
+
+.notice__title {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.progress:indeterminate {
+  background: linear-gradient(90deg, var(--surface-sunk) 0%, var(--accent) 50%, var(--surface-sunk) 100%) 0 0 / 50% 100% no-repeat,
+    var(--surface-sunk);
+  animation: sweep 1.2s ease-in-out infinite;
+}
+
+.progress:indeterminate::-webkit-progress-bar {
+  background: transparent;
+}
+
+.progress:indeterminate::-moz-progress-bar {
+  background: transparent;
+}
+
+@keyframes sweep {
+  from {
+    background-position: -100% 0, 0 0;
+  }
+  to {
+    background-position: 200% 0, 0 0;
+  }
+}
+
+/* ---------- the confirmation ---------- */
+
+.panel__cap {
+  margin-top: 10px !important;
+  color: var(--text) !important;
+}
+
+.more {
+  margin-top: 10px;
+}
+
+.more > summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-2);
+  cursor: pointer;
+  list-style: none;
+}
+
+.more > summary::-webkit-details-marker {
+  display: none;
+}
+
+.more > summary::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(-45deg);
+  transition: transform 0.15s;
+  flex: none;
+}
+
+.more[open] > summary::before {
+  transform: rotate(45deg);
+}
+
+.files,
+.plain {
+  max-height: 320px;
+  overflow: auto;
+  margin: 10px 0 0;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  background: var(--surface-sunk);
+  list-style: none;
+  font-size: 14px;
+}
+
+.files__item {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 2px 16px;
+  padding: 6px 0;
+}
+
+.files__item + .files__item {
+  border-top: 1px solid var(--line);
+}
+
+.files__name {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.files__what {
+  color: var(--text-3);
+}
+
+.files__item.is-read .files__what {
+  color: var(--ok);
+  font-weight: 600;
+}
+
+.files__item.is-read .files__where {
+  font-weight: 400;
+  color: var(--text-3);
+}
+
+.files__item.is-unreadable .files__what {
+  color: var(--lost);
+}
+
+.plain li {
+  padding: 2px 0;
+}
+
+.panel__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 18px;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px dashed var(--line);
+}
+
+.panel__actions .button {
+  padding: 7px 14px;
+  font-size: 15px;
+}
+
+/* ---------- footer ---------- */
+
+.footer {
+  border-top: 1px solid var(--line);
+  font-size: 14px;
+  color: var(--text-3);
+}
+
+.footer__inner {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  padding-top: 18px;
+  padding-bottom: 28px;
+}
+
+/* ---------- comparison and exports ---------- */
+
+.nexts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 10px;
+  margin: 16px 0 24px;
+}
+
+.nexts .next {
+  margin: 0;
+}
+
+.compare-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.compare {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+.compare th,
+.compare td {
+  padding: 12px 16px;
+  text-align: left;
+  vertical-align: baseline;
+}
+
+.compare thead th {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-3);
+  border-bottom: 1px solid var(--line);
+}
+
+.compare tbody tr + tr > * {
+  border-top: 1px solid var(--line);
+}
+
+.compare .compare__rank {
+  width: 1%;
+  padding-right: 0;
+  color: var(--text-3);
+  font-weight: 600;
+}
+
+.compare__country {
+  font-weight: 600;
+}
+
+.compare__pick {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--accent);
+  font-weight: 600;
+  text-align: left;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--accent) 35%, transparent);
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.compare__pick:hover {
+  text-decoration-color: currentColor;
+}
+
+.compare__name {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+}
+
+.compare__yours {
+  display: inline-block;
+  padding: 1px 9px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.compare__row.is-selected > * {
+  background: color-mix(in srgb, var(--accent-soft) 55%, transparent);
+}
+
+.compare__figure {
+  white-space: nowrap;
+  color: var(--text-3);
+}
+
+.compare__figure.is-lossy {
+  color: var(--lost);
+  font-weight: 600;
+}
+
+.compare__figure.is-clear {
+  color: var(--ok);
+  font-weight: 600;
+}
+
+.compare__figure .linkish {
+  margin-left: 6px;
+}
+
+.compare__figure .is-loading::before {
+  content: "";
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  margin-right: 6px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  vertical-align: -1px;
+  animation: spin 0.8s linear infinite;
+}
+
+.compare__paid {
+  color: var(--text-2);
+}
+
+.compare__note {
+  margin: 12px 0 0;
+  font-size: 14px;
+  color: var(--text-3);
+}
+
+.download {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+}
+
+.download .button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.download__hint {
+  margin: 0;
+  font-size: 14px;
+  color: var(--text-3);
+}
+
+/* On paper only: the printed checklist's heading and its list of apps to redownload. */
+.print-only {
+  display: none;
+}
+
+/* ---------- small screens ---------- */
+
+@media (max-width: 640px) {
+  .main {
+    padding-top: 28px;
+  }
+
+  .route {
+    grid-template-columns: 1fr;
+  }
+
+  .select {
+    width: 100%;
+  }
+
+  .select--small {
+    width: auto;
+    flex: 1 1 auto;
+  }
+
+  .destinations {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .verdict {
+    padding: 20px 20px 18px 22px;
+  }
+
+  .app {
+    grid-template-columns: 40px minmax(0, 1fr);
+  }
+
+  .app__meta {
+    grid-column: 2;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px 12px;
+    justify-items: start;
+    text-align: left;
+  }
+
+  .badge {
+    font-size: 12px;
+  }
+
+  .compare th,
+  .compare td {
+    padding: 10px 12px;
+  }
+
+  .compare .compare__rank {
+    padding-right: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* ---------- the printed checklist ---------- */
+
+@media print {
+  :root {
+    --bg: #fff;
+    --surface: #fff;
+    --surface-sunk: #fff;
+    --text: #000;
+    --text-2: #222;
+    --text-3: #555;
+    --line: #bbb;
+    --accent: #000;
+    --accent-soft: #fff;
+    --lost: #000;
+    --lost-soft: #fff;
+  }
+
+  @page {
+    margin: 16mm 14mm;
+  }
+
+  body {
+    background: #fff;
+    font-size: 11pt;
+    line-height: 1.4;
+  }
+
+  .topbar,
+  .footer,
+  .skip,
+  .actions,
+  .screen-only,
+  .linkish {
+    display: none !important;
+  }
+
+  .print-only {
+    display: block;
+  }
+
+  .main {
+    padding: 0;
+  }
+
+  .wrap {
+    max-width: none;
+    padding: 0;
+  }
+
+  .print-head {
+    margin: 0 0 6px;
+    font-size: 9pt;
+    color: var(--text-3);
+  }
+
+  .title {
+    font-size: 20pt;
+  }
+
+  .lede {
+    font-size: 11pt;
+  }
+
+  .intro {
+    margin-bottom: 14px;
+  }
+
+  .checklist {
+    max-width: none;
+    font-size: 11pt;
+  }
+
+  /* Each of Apple's steps gets a box to tick, its number moved into the title. */
+  .checklist__item {
+    padding: 8px 0 8px 30px;
+    border: 0;
+    border-radius: 0;
+    break-inside: avoid;
+  }
+
+  .checklist__item + .checklist__item {
+    margin-top: 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .checklist__item::before,
+  .ticks > li::before {
+    content: "";
+    position: absolute;
+    top: 10px;
+    left: 0;
+    width: 14px;
+    height: 14px;
+    border: 1.5px solid #000;
+    border-radius: 3px;
+    background: none;
+  }
+
+  .checklist__title::before {
+    content: counter(step) ". ";
+  }
+
+  .yours {
+    margin-top: 6px !important;
+    padding: 0;
+    border: 0;
+    background: none;
+  }
+
+  .ticks {
+    margin: 6px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .ticks > li {
+    position: relative;
+    margin: 0;
+    padding: 3px 0 3px 22px;
+    break-inside: avoid;
+  }
+
+  .ticks > li::before {
+    top: 5px;
+    width: 11px;
+    height: 11px;
+  }
+
+  .ticks--apps {
+    columns: 2;
+    column-gap: 24px;
+  }
+
+  .tag {
+    padding: 0;
+    background: none !important;
+    font-weight: 400;
+    font-style: italic;
+  }
+
+  .tag::before {
+    content: "(";
+  }
+
+  .tag::after {
+    content: ")";
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .source-link::after {
+    content: " (" attr(href) ")";
+  }
+}
+</style>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="topbar">
+    <div class="wrap topbar__inner">
+      <span class="brand"><span class="brand__mark" aria-hidden="true"></span>Libertyscan</span>
+      <span class="badge">Preview · build step 6</span>
+    </div>
+  </header>
+  <main id="main" class="wrap main">
+    <p class="boot">Loading…</p>
+  </main>
+  <noscript><p class="wrap">Libertyscan runs entirely in your browser and needs JavaScript switched on.</p></noscript>
+  <footer class="footer" id="footer">
+    <div class="wrap footer__inner">
+      <button type="button" class="linkish" data-action="go" data-value="privacy">Privacy and terms</button>
+      <span>Free. Not affiliated with Apple.</span>
+    </div>
+  </footer>
+<script>(() => {
+  // src/js/config.js
+  var LOOKUP_ENDPOINT = "https://itunes.apple.com/lookup";
+  var BATCH_SIZE = 150;
+  var BUNDLE_BATCH_SIZE = 100;
+  var RATE = { burst: 2, gapMs: 3e3 };
+  var RETRY_DELAYS_MS = [4e3, 8e3, 16e3, 32e3];
+  var APP_CAP = 1e3;
+  var SCOPE_DAYS = 365;
+  var SIGNUP = {
+    endpoint: "https://script.google.com/macros/s/AKfycbwBrzTDR_dnFW9utgSTFEdNgZoGQWvgZkC0vqJJDFFLvwa1C06PR9ldGJpDeulVVzFBCw/exec"
+  };
+  var CONTACT = {
+    email: ""
+  };
+
+  // src/js/html.js
+  var ENTITIES = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" };
+  var SafeHtml = class {
+    constructor(value) {
+      this.value = value;
+    }
+    toString() {
+      return this.value;
+    }
+  };
+  function escapeHtml(value) {
+    return String(value).replace(/[&<>"']/g, (ch) => ENTITIES[ch]);
+  }
+  function render(value) {
+    if (value === null || value === void 0 || value === false || value === true) return "";
+    if (value instanceof SafeHtml) return value.value;
+    if (Array.isArray(value)) return value.map(render).join("");
+    return escapeHtml(value);
+  }
+  function html(strings, ...values) {
+    let out = strings[0];
+    for (let i = 0; i < values.length; i += 1) out += render(values[i]) + strings[i + 1];
+    return new SafeHtml(out);
+  }
+  function trusted(markup) {
+    return new SafeHtml(String(markup));
+  }
+  function safeUrl(value, hosts) {
+    try {
+      const url = new URL(String(value));
+      if (url.protocol !== "https:") return "";
+      if (!hosts.some((host) => url.hostname === host || url.hostname.endsWith(`.${host}`))) return "";
+      url.search = "";
+      url.hash = "";
+      return url.href;
+    } catch {
+      return "";
+    }
+  }
+
+  // src/js/queue.js
+  var HttpError = class extends Error {
+    constructor(status) {
+      super(`Apple answered HTTP ${status}`);
+      this.name = "HttpError";
+      this.status = status;
+    }
+  };
+  var CancelledError = class extends Error {
+    constructor() {
+      super("Cancelled");
+      this.name = "CancelledError";
+    }
+  };
+  function isRetryable(error) {
+    if (error instanceof CancelledError) return false;
+    if (error instanceof HttpError) {
+      return error.status === 403 || error.status === 408 || error.status === 429 || error.status >= 500;
+    }
+    return true;
+  }
+  function createQueue({
+    fetchJson: fetchJson2,
+    burst = RATE.burst,
+    gapMs = RATE.gapMs,
+    retryDelays = RETRY_DELAYS_MS,
+    now = () => Date.now(),
+    sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
+  }) {
+    const waiting = [];
+    let sequence = 0;
+    let tokens = burst;
+    let stamp = now();
+    let pausedUntil = 0;
+    let pumping = false;
+    function refill() {
+      const t = now();
+      if (t > stamp) {
+        tokens = Math.min(burst, tokens + (t - stamp) / gapMs);
+        stamp = t;
+      }
+    }
+    function takeNext() {
+      let best = 0;
+      for (let i = 1; i < waiting.length; i += 1) {
+        const a = waiting[i];
+        const b = waiting[best];
+        if (a.priority < b.priority || a.priority === b.priority && a.seq < b.seq) best = i;
+      }
+      return waiting.splice(best, 1)[0];
+    }
+    async function pump() {
+      if (pumping) return;
+      pumping = true;
+      try {
+        while (waiting.length) {
+          const t = now();
+          if (pausedUntil > t) {
+            await sleep(pausedUntil - t);
+            continue;
+          }
+          refill();
+          if (tokens < 1) {
+            await sleep(Math.ceil((1 - tokens) * gapMs));
+            continue;
+          }
+          tokens -= 1;
+          send(takeNext());
+        }
+      } finally {
+        pumping = false;
+      }
+    }
+    async function send(job) {
+      job.attempts += 1;
+      const url = typeof job.url === "function" ? job.url(job.attempts) : job.url;
+      try {
+        job.resolve(await fetchJson2(url));
+      } catch (error) {
+        const delay = retryDelays[job.attempts - 1];
+        if (delay === void 0 || !isRetryable(error)) {
+          job.reject(error);
+          return;
+        }
+        const until = now() + delay;
+        if (until > pausedUntil) {
+          pausedUntil = until;
+          tokens = 1;
+          stamp = until;
+        }
+        waiting.push(job);
+        pump();
+      }
+    }
+    return {
+      /** `url` is a string, or a function of the attempt number (1, 2, …) returning one. */
+      add(url, { priority = 1, meta = {} } = {}) {
+        return new Promise((resolve, reject) => {
+          waiting.push({ url, priority, meta, seq: sequence++, attempts: 0, resolve, reject });
+          pump();
+        });
+      },
+      /** Drops every waiting call whose `meta` matches; each rejects with a CancelledError. Calls already sent finish normally. */
+      cancel(matches2) {
+        for (let i = waiting.length - 1; i >= 0; i -= 1) {
+          if (matches2(waiting[i].meta)) waiting.splice(i, 1)[0].reject(new CancelledError());
+        }
+      },
+      /** Recompute the priority of every call still waiting, from its `meta`. */
+      reprioritize(fn) {
+        for (const job of waiting) job.priority = fn(job.meta, job.priority);
+      },
+      get waiting() {
+        return waiting.length;
+      }
+    };
+  }
+
+  // src/js/lookup.js
+  function lookupUrl(ids, countryCode, attempt = 1) {
+    const url = `${LOOKUP_ENDPOINT}?id=${ids.join(",")}&country=${countryCode}`;
+    return attempt > 1 ? `${url}&retry=${attempt}` : url;
+  }
+  function bundleLookupUrl(bundleIds, countryCode, attempt = 1) {
+    const url = `${LOOKUP_ENDPOINT}?bundleId=${bundleIds.map(encodeURIComponent).join(",")}&country=${countryCode}`;
+    return attempt > 1 ? `${url}&retry=${attempt}` : url;
+  }
+  function compareIds(a, b) {
+    if (a.length !== b.length) return a.length - b.length;
+    if (a === b) return 0;
+    return a < b ? -1 : 1;
+  }
+  function makeBatches(ids, size = BATCH_SIZE) {
+    const unique = [...new Set(ids.map(String))].sort(compareIds);
+    const batches = [];
+    for (let i = 0; i < unique.length; i += size) batches.push(unique.slice(i, i + size));
+    return batches;
+  }
+  function platformOf(kind) {
+    if (kind === "software") return "ios";
+    if (kind === "mac-software") return "mac";
+    return "other";
+  }
+  function parseLookup(json) {
+    const found = /* @__PURE__ */ new Map();
+    const results = Array.isArray(json?.results) ? json.results : [];
+    for (const item of results) {
+      if (!item || item.trackId === void 0 || item.trackId === null) continue;
+      found.set(String(item.trackId), {
+        name: typeof item.trackName === "string" ? item.trackName : "",
+        platform: platformOf(item.kind),
+        genre: typeof item.primaryGenreName === "string" ? item.primaryGenreName : "",
+        price: typeof item.price === "number" ? item.price : null,
+        currency: typeof item.currency === "string" ? item.currency : "",
+        url: safeUrl(item.trackViewUrl, ["apple.com"]),
+        icon: safeUrl(item.artworkUrl100 || item.artworkUrl60, ["mzstatic.com"])
+      });
+    }
+    return found;
+  }
+  function parseBundleLookup(json) {
+    const found = /* @__PURE__ */ new Map();
+    const results = Array.isArray(json?.results) ? json.results : [];
+    for (const item of results) {
+      if (typeof item?.bundleId !== "string" || item.trackId === void 0 || item.trackId === null) continue;
+      const key = item.bundleId.toLowerCase();
+      if (!found.has(key)) found.set(key, String(item.trackId));
+    }
+    return found;
+  }
+  async function fetchJson(url) {
+    const response = await fetch(url, { credentials: "omit", referrerPolicy: "no-referrer" });
+    if (!response.ok) throw new HttpError(response.status);
+    return response.json();
+  }
+
+  // src/js/availability.js
+  function createAvailability({ ids, queue: queue2, onChange = () => {
+  }, now = () => Date.now() }) {
+    const batches = makeBatches(ids);
+    const stores = /* @__PURE__ */ new Map();
+    const owner = {};
+    let disposed = false;
+    function get(code) {
+      let store = stores.get(code);
+      if (!store) {
+        store = {
+          code,
+          status: "idle",
+          // idle → loading → done | error
+          found: /* @__PURE__ */ new Map(),
+          resolved: /* @__PURE__ */ new Set(),
+          done: 0,
+          failed: [],
+          total: batches.length,
+          checkedAt: null,
+          error: null
+        };
+        stores.set(code, store);
+      }
+      return store;
+    }
+    function settle(store) {
+      if (store.done + store.failed.length < store.total) return;
+      store.status = store.failed.length ? "error" : "done";
+      store.checkedAt = now();
+    }
+    function request(store, batch, priority) {
+      queue2.add((attempt) => lookupUrl(batch, store.code, attempt), { priority, meta: { country: store.code, owner } }).then(
+        (json) => {
+          const found = parseLookup(json);
+          for (const id of batch) {
+            store.resolved.add(id);
+            const details = found.get(id);
+            if (details) store.found.set(id, details);
+          }
+          store.done += 1;
+        },
+        (error) => {
+          store.failed.push(batch);
+          store.error = error;
+        }
+      ).then(() => {
+        if (disposed) return;
+        settle(store);
+        onChange(store.code);
+      });
+    }
+    return {
+      batches,
+      get,
+      /** Starts checking a store, once. Later calls for the same store do nothing. */
+      load(code, priority = 1) {
+        const store = get(code);
+        if (store.status !== "idle") return;
+        store.status = "loading";
+        settle(store);
+        onChange(code);
+        for (const batch of batches) request(store, batch, priority);
+      },
+      /** Asks again for the batches that failed. */
+      retry(code, priority = 0) {
+        const store = get(code);
+        if (store.status !== "error") return;
+        const failed = store.failed;
+        store.failed = [];
+        store.error = null;
+        store.status = "loading";
+        onChange(code);
+        for (const batch of failed) request(store, batch, priority);
+      },
+      /** Moves the calls for these stores to the front of the queue. */
+      focus(codes) {
+        queue2.reprioritize((meta, priority) => meta.owner === owner ? codes.includes(meta.country) ? 0 : 1 : priority);
+      },
+      /** Drops this library's calls that have not left yet; used when the person moves on to other files. */
+      dispose() {
+        disposed = true;
+        queue2.cancel((meta) => meta.owner === owner);
+      },
+      knowledge(code, id) {
+        const store = stores.get(code);
+        if (!store || !store.resolved.has(id)) return "unknown";
+        return store.found.has(id) ? "present" : "absent";
+      },
+      info(code, id) {
+        return stores.get(code)?.found.get(id) ?? null;
+      },
+      progress(codes) {
+        let done = 0;
+        let total = 0;
+        for (const code of codes) {
+          const store = get(code);
+          done += store.done;
+          total += store.total;
+        }
+        return { done, total };
+      }
+    };
+  }
+
+  // src/js/text.js
+  var ODD_SPACES = /[    ]/g;
+  function cleanName(value) {
+    return String(value ?? "").replace(ODD_SPACES, " ").replace(/\s+/g, " ").trim();
+  }
+  function fold(value) {
+    return cleanName(value).normalize("NFKD").replace(/[̀-ͯ]/g, "").toLowerCase();
+  }
+  function sameName(a, b) {
+    return fold(a) === fold(b);
+  }
+
+  // src/js/browse.js
+  var collator = new Intl.Collator("en", { sensitivity: "base", numeric: true });
+  var byName = (a, b) => collator.compare(a.name, b.name) || (a.id < b.id ? -1 : 1);
+  var byRecent = (a, b) => (b.lastActivity ?? -Infinity) - (a.lastActivity ?? -Infinity) || byName(a, b);
+  var SECTIONS = ["lost", "available", "delisted"];
+  function matches(row3, { platform, category, query }) {
+    if (platform !== "all" && row3.platform !== platform) return false;
+    if (category && row3.genre !== category) return false;
+    if (query && !row3.search.includes(query)) return false;
+    return true;
+  }
+  function browse(results, filters) {
+    const query = fold(filters.query);
+    const active = { platform: filters.platform, category: filters.category, query };
+    const every = SECTIONS.flatMap((s) => results.groups[s]);
+    const platforms = { all: every.length, ios: 0, mac: 0 };
+    const categories = /* @__PURE__ */ new Map();
+    for (const row3 of every) {
+      if (row3.platform in platforms && row3.platform !== "all") platforms[row3.platform] += 1;
+      if (row3.genre) categories.set(row3.genre, (categories.get(row3.genre) ?? 0) + 1);
+    }
+    const sort = filters.sort === "recent" ? byRecent : byName;
+    const sections = {};
+    for (const s of SECTIONS) sections[s] = results.groups[s].filter((row3) => matches(row3, active)).sort(sort);
+    return {
+      sections,
+      platforms,
+      categories: [...categories.entries()].sort((a, b) => collator.compare(a[0], b[0])),
+      filtering: Boolean(query || filters.category || filters.platform !== "all"),
+      searching: Boolean(query)
+    };
+  }
+
+  // src/js/countries.js
+  var COUNTRIES = Object.freeze(
+    [
+      { code: "fr", name: "France", phrase: "France", adjective: "French", storefront: "France" },
+      { code: "de", name: "Germany", phrase: "Germany", adjective: "German", storefront: "Germany" },
+      { code: "jp", name: "Japan", phrase: "Japan", adjective: "Japanese", storefront: "Japan" },
+      { code: "nl", name: "Netherlands", phrase: "the Netherlands", adjective: "Dutch", storefront: "Netherlands" },
+      { code: "gb", name: "United Kingdom", phrase: "the United Kingdom", adjective: "UK", storefront: "United Kingdom" },
+      { code: "us", name: "United States", phrase: "the United States", adjective: "US", storefront: "United States" }
+    ].map((country) => Object.freeze(country))
+  );
+  var COUNTRY_CODES = COUNTRIES.map((c) => c.code);
+  var BY_CODE = new Map(COUNTRIES.map((c) => [c.code, c]));
+  function isSupported(code) {
+    return BY_CODE.has(code);
+  }
+  function getCountry(code) {
+    const country = BY_CODE.get(code);
+    if (!country) throw new Error(`Unsupported country: ${code}`);
+    return country;
+  }
+  function codeForStorefront(name) {
+    const wanted = String(name ?? "").trim().toLowerCase();
+    const hit = COUNTRIES.find((c) => c.storefront.toLowerCase() === wanted);
+    return hit ? hit.code : null;
+  }
+  var METADATA_FALLBACK_ORDER = ["gb", "us", "fr", "de", "nl", "jp"];
+
+  // src/js/money.js
+  var digitsCache = /* @__PURE__ */ new Map();
+  function fractionDigits(currency) {
+    if (!digitsCache.has(currency)) {
+      let digits = 2;
+      try {
+        digits = new Intl.NumberFormat("en", { style: "currency", currency }).resolvedOptions().maximumFractionDigits;
+      } catch {
+      }
+      digitsCache.set(currency, digits);
+    }
+    return digitsCache.get(currency);
+  }
+  var formats = /* @__PURE__ */ new Map();
+  function formatAmount({ currency, minor }) {
+    if (!formats.has(currency)) formats.set(currency, new Intl.NumberFormat("en-GB", { style: "currency", currency }));
+    return formats.get(currency).format(minor / 10 ** fractionDigits(currency));
+  }
+  function formatTotals(totals) {
+    const parts = [...totals].filter(([, minor]) => minor > 0).sort((a, b) => b[1] - a[1]).map(([currency, minor]) => formatAmount({ currency, minor }));
+    if (parts.length <= 1) return parts.join("");
+    return `${parts.slice(0, -1).join(", ")} and ${parts.at(-1)}`;
+  }
+
+  // src/js/copy.js
+  var numberFormat = new Intl.NumberFormat("en-GB");
+  var monthFormat = new Intl.DateTimeFormat("en-GB", { month: "short", year: "numeric", timeZone: "UTC" });
+  var dayFormat = new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "long", year: "numeric" });
+  var count = (n) => numberFormat.format(n);
+  var month = (ms) => monthFormat.format(ms);
+  var day = (ms) => dayFormat.format(ms);
+  var plural = (n, one, many) => n === 1 ? one : many;
+  function verdict({ total, lost, available, delisted }, source, target) {
+    const to = target.phrase;
+    if (total === 0) return { tone: "neutral", text: "There are no apps in this view." };
+    if (lost > 0) {
+      if (total === 1) return { tone: "lost", text: `Your app won't survive a move to ${to}.` };
+      if (lost === total) return { tone: "lost", text: `None of your ${count(total)} apps survive a move to ${to}.` };
+      return { tone: "lost", text: `${count(lost)} of your ${count(total)} apps won't survive a move to ${to}.` };
+    }
+    if (available === 0) {
+      return {
+        tone: "ok",
+        text: `Nothing to lose: none of these apps are on the App Store in ${source.phrase} or ${to} any more.`
+      };
+    }
+    if (delisted === 0) {
+      return total === 1 ? { tone: "ok", text: `Your app survives a move to ${to}.` } : { tone: "ok", text: `All ${count(total)} of your apps survive a move to ${to}.` };
+    }
+    return available === 1 ? { tone: "ok", text: `Your one app still on the App Store survives a move to ${to}.` } : { tone: "ok", text: `All ${count(available)} of your apps still on the App Store survive a move to ${to}.` };
+  }
+  function delistedLine(n, source, target) {
+    if (!n) return "";
+    return `${count(n)} ${plural(n, "app is", "apps are")} no longer on the App Store in ${source.phrase} or ${target.phrase}.`;
+  }
+  function lostLabel(n) {
+    return n === 0 ? "Nothing lost" : `${count(n)} lost`;
+  }
+  function checkingLine(total, source, target) {
+    return `Asking Apple about your ${count(total)} ${plural(total, "app", "apps")} in ${source.phrase} and ${target.phrase}…`;
+  }
+  function listNames(countries) {
+    const names = countries.map((c) => c.phrase);
+    if (names.length <= 1) return names.join("");
+    return `${names.slice(0, -1).join(", ")} and ${names[names.length - 1]}`;
+  }
+  var PLATFORM_LABELS = { ios: "iPhone & iPad", mac: "Mac", other: "Other" };
+  var limitLine = (cap) => `We check up to ${count(cap)} apps. If your file has more, we keep the ${count(cap)} you used most recently.`;
+  function foundLine({ apps, paid = 0, subscriptions = 0, devices = 0 }) {
+    let text = `Found ${count(apps)} ${plural(apps, "app", "apps")}`;
+    if (paid) text += ` (${count(paid)} paid)`;
+    if (subscriptions) text += `, ${count(subscriptions)} ${plural(subscriptions, "subscription record", "subscription records")}`;
+    if (devices) text += `, ${count(devices)} ${plural(devices, "device", "devices")}`;
+    return `${text}.`;
+  }
+  function filesLine({ read = 0, ignored = 0, unreadable = 0 }) {
+    const parts = [`Read ${count(read)} ${plural(read, "file", "files")}`];
+    if (ignored) parts.push(`ignored ${count(ignored)}`);
+    if (unreadable) parts.push(`couldn't open ${count(unreadable)}`);
+    return `${parts.join(", ")}.`;
+  }
+  function capLine(total, kept) {
+    const left = total - kept;
+    return `Your file lists ${count(total)} apps; we'll check the ${count(kept)} you used most recently. ${count(left)} older ${plural(left, "app is", "apps are")} left out.`;
+  }
+  var KIND_LABELS = {
+    purchases: "Purchase history",
+    updates: "Re-download and update history",
+    subscriptions: "Subscription history",
+    installs: "App install activity"
+  };
+  var BADGES = { renewing: "Cancel before you switch", maybe: "May still be running" };
+  function subscriptionsLine({ renewing, maybe }) {
+    const first = renewing ? `${count(renewing)} ${plural(renewing, "subscription", "subscriptions")} to cancel before you switch` : "No subscriptions to cancel";
+    return maybe ? `${first} — ${count(maybe)} recently cancelled may still be running.` : `${first}.`;
+  }
+  var appsPhrase = (n) => n === 1 ? "an app" : `${count(n)} apps`;
+  function paidLine({ lost, delisted }, source, target) {
+    let text = lost.apps ? `You spent ${formatTotals(lost.totals)} on ${appsPhrase(lost.apps)} you'd lose${lost.inApp ? ", in-app purchases included" : ""}.` : "None of your paid apps are affected.";
+    if (delisted.apps) {
+      text += ` ${count(delisted.apps)} ${plural(delisted.apps, "app", "apps")} you paid ${formatTotals(delisted.totals)} for ${plural(delisted.apps, "is", "are")} no longer on the App Store in ${source.phrase} or ${target.phrase}.`;
+    }
+    return text;
+  }
+  function paidLabel(totals) {
+    return `Paid ${formatTotals(totals)}`;
+  }
+  function compareLede(total, scope, source) {
+    if (total === 0) return "There are no apps in this view.";
+    const from = `moving there from ${source.phrase}`;
+    if (total === 1) return `Each country's App Store, and whether you'd lose your app ${from}.`;
+    const apps = scope === "12m" ? `the ${count(total)} apps you used in the last 12 months` : `your ${count(total)} apps`;
+    return `Each country's App Store, ranked by how many of ${apps} you'd lose ${from}.`;
+  }
+  function paidCell({ apps, totals }) {
+    return apps ? `${formatTotals(totals)} on ${count(apps)} ${plural(apps, "app", "apps")}` : "None";
+  }
+  var CSV_STATUS = {
+    available: "Available",
+    lost: "Lost",
+    delisted: "Delisted",
+    pending: "Not checked",
+    loading: "Not checked",
+    error: "Couldn't check"
+  };
+  function csvWaitLine(left) {
+    return `Ready in a moment: still checking ${count(left)} ${plural(left, "country", "countries")}.`;
+  }
+  function printRoute(source, target, scope) {
+    const which = scope === "12m" ? "apps used in the last 12 months" : "all your apps";
+    return `Moving from ${source.phrase} to ${target.phrase} · ${which}`;
+  }
+  function redownloadTitle(n, target) {
+    return `${n === 1 ? "The app" : `The ${count(n)} apps`} you'd lose moving to ${target.phrase}:`;
+  }
+
+  // src/js/dates.js
+  var DAY_MS = 864e5;
+  var HAS_ZONE = /(?:Z|[+-]\d{2}:?\d{2})$/i;
+  function parseDate(value) {
+    if (value === null || value === void 0) return null;
+    if (typeof value === "number") return Number.isFinite(value) ? value : null;
+    const text = String(value).trim();
+    if (!text) return null;
+    const iso = /^\d{4}-\d{2}-\d{2}T/.test(text) && !HAS_ZONE.test(text) ? `${text}Z` : text;
+    const ms = Date.parse(iso);
+    return Number.isNaN(ms) ? null : ms;
+  }
+
+  // src/js/purchases.js
+  function subscriptionState(sub, fileDate) {
+    if (sub.renewing) return "renewing";
+    if (fileDate === null || fileDate === void 0) return null;
+    const since = fileDate - SCOPE_DAYS * DAY_MS;
+    const paidRecently = sub.charges.some((c) => !c.refunded && c.amount?.minor > 0 && c.at !== null && c.at >= since);
+    return paidRecently ? "maybe" : null;
+  }
+  var URGENCY = { renewing: 2, maybe: 1 };
+  function attachPurchases(library, { spending = /* @__PURE__ */ new Map(), subscriptions = [], subscriptionsKnown = false } = {}) {
+    const judged = subscriptions.map((sub) => ({ ...sub, state: subscriptionState(sub, library.fileDate) ?? null }));
+    const badges = /* @__PURE__ */ new Map();
+    for (const sub of judged) {
+      if (!sub.state) continue;
+      const known = badges.get(sub.appId);
+      if (!known || URGENCY[sub.state] > URGENCY[known]) badges.set(sub.appId, sub.state);
+    }
+    return { ...library, spending, subscriptions: judged, badges, subscriptionsKnown };
+  }
+  function spentOn(spending, id) {
+    const spent2 = spending.get(id);
+    if (!spent2) return null;
+    const totals = new Map(spent2.price);
+    for (const [currency, minor] of spent2.inApp) totals.set(currency, (totals.get(currency) ?? 0) + minor);
+    return totals.size ? totals : null;
+  }
+  function spendingAtRisk(groups, spending) {
+    const sum = (rows2) => {
+      const totals = /* @__PURE__ */ new Map();
+      let apps = 0;
+      let inApp = false;
+      for (const row3 of rows2) {
+        const spent2 = spending.get(row3.id);
+        if (!spent2) continue;
+        apps += 1;
+        if (spent2.inApp.size) inApp = true;
+        for (const [currency, minor] of spentOn(spending, row3.id)) totals.set(currency, (totals.get(currency) ?? 0) + minor);
+      }
+      return { apps, totals, inApp };
+    };
+    return { lost: sum(groups.lost), delisted: sum(groups.delisted), anyPaid: spending.size > 0 };
+  }
+  function subscriptionsToMind(subscriptions) {
+    return subscriptions.filter((sub) => sub.state).sort((a, b) => URGENCY[b.state] - URGENCY[a.state] || a.plan.localeCompare(b.plan));
+  }
+
+  // src/js/results.js
+  function inScope(app, scope, fileDate) {
+    if (scope !== "12m") return true;
+    if (app.lastActivity === null || fileDate === null) return false;
+    return app.lastActivity >= fileDate - SCOPE_DAYS * DAY_MS;
+  }
+  function appsInScope(library, scope) {
+    return library.apps.filter((app) => inScope(app, scope, library.fileDate));
+  }
+  function scopeCounts(library) {
+    return {
+      all: library.apps.length,
+      recent: library.hasRecency ? appsInScope(library, "12m").length : null
+    };
+  }
+  function statusOf(id, source, target, knowledge) {
+    const inTarget = knowledge(target, id);
+    if (inTarget === "present") return "available";
+    if (inTarget === "unknown") return "pending";
+    const inSource = knowledge(source, id);
+    if (inSource === "present") return "lost";
+    if (inSource === "absent") return "delisted";
+    return "pending";
+  }
+  function describeApp(app, status, { source, target, availability: availability2, library = null }) {
+    const order = [source, target, ...METADATA_FALLBACK_ORDER.filter((c) => c !== source && c !== target)];
+    let info = null;
+    for (const code of order) {
+      info = availability2.info(code, app.id);
+      if (info) break;
+    }
+    const name = app.name || info?.name || `App ${app.id}`;
+    return {
+      id: app.id,
+      status,
+      name,
+      storeName: app.name && info?.name && !sameName(app.name, info.name) ? info.name : "",
+      platform: info?.platform ?? "unknown",
+      genre: info?.genre ?? "",
+      icon: info?.icon ?? "",
+      storeUrl: status === "lost" ? availability2.info(source, app.id)?.url ?? "" : "",
+      lastActivity: app.lastActivity,
+      stillListedIn: status === "delisted" ? COUNTRY_CODES.filter((c) => c !== source && c !== target && availability2.knowledge(c, app.id) === "present") : [],
+      search: fold(`${name} ${info?.name ?? ""}`),
+      badge: library?.badges?.get(app.id) ?? null,
+      spent: library?.spending ? spentOn(library.spending, app.id) : null
+    };
+  }
+  function derive({ library, availability: availability2, source, target, scope }) {
+    const apps = appsInScope(library, scope);
+    const groups = { lost: [], available: [], delisted: [], pending: [] };
+    for (const app of apps) {
+      const status = statusOf(app.id, source, target, availability2.knowledge);
+      groups[status].push(describeApp(app, status, { source, target, availability: availability2, library }));
+    }
+    const counts = { total: apps.length };
+    for (const [status, rows2] of Object.entries(groups)) counts[status] = rows2.length;
+    return { counts, groups, money: spendingAtRisk(groups, library.spending ?? /* @__PURE__ */ new Map()) };
+  }
+  function pairStatus(availability2, source, target) {
+    const from = availability2.get(source).status;
+    const to = availability2.get(target).status;
+    if (from === "error" || to === "error") return "error";
+    return from === "done" && to === "done" ? "done" : "loading";
+  }
+  function compare({ library, availability: availability2, source, scope }) {
+    const apps = appsInScope(library, scope);
+    const spending = library.spending ?? /* @__PURE__ */ new Map();
+    const rows2 = COUNTRY_CODES.filter((code) => code !== source).map((code) => {
+      const status = pairStatus(availability2, source, code);
+      if (status !== "done") return { code, status, rank: null, counts: null, money: null };
+      const groups = { lost: [], available: [], delisted: [], pending: [] };
+      for (const app of apps) groups[statusOf(app.id, source, code, availability2.knowledge)].push(app);
+      const counts = { total: apps.length };
+      for (const [key, list] of Object.entries(groups)) counts[key] = list.length;
+      return { code, status, rank: null, counts, money: spendingAtRisk(groups, spending) };
+    });
+    const cost = (row3) => [row3.counts.lost, row3.money.lost.apps];
+    const ranked = rows2.filter((row3) => row3.status === "done").sort((a, b) => cost(a)[0] - cost(b)[0] || cost(a)[1] - cost(b)[1]);
+    ranked.forEach((row3, i) => {
+      const before = ranked[i - 1];
+      const tied = before && cost(before)[0] === cost(row3)[0] && cost(before)[1] === cost(row3)[1];
+      row3.rank = tied ? before.rank : i + 1;
+    });
+    return [...ranked, ...rows2.filter((row3) => row3.status !== "done")];
+  }
+
+  // src/js/csv.js
+  var BOM = "\uFEFF";
+  var FORMULA_START = /^[=+\-@\t\r]/;
+  var collator2 = new Intl.Collator("en", { sensitivity: "base", numeric: true });
+  function csvField(value) {
+    let text = value === null || value === void 0 ? "" : String(value);
+    if (FORMULA_START.test(text)) text = `'${text}`;
+    return /[",\r\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
+  }
+  function csvText(rows2) {
+    return `${BOM}${rows2.map((row3) => row3.map(csvField).join(",")).join("\r\n")}\r
+`;
+  }
+  var isoDay = (ms) => ms === null ? "" : new Date(ms).toISOString().slice(0, 10);
+  function localDay(ms) {
+    const d = new Date(ms);
+    const pad = (n) => String(n).padStart(2, "0");
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+  }
+  function csvName(source, scope, now) {
+    const from = getCountry(source).name.toLowerCase().replace(/\s+/g, "-");
+    return `libertyscan-from-${from}${scope === "12m" ? "-last-12-months" : ""}-${localDay(now)}.csv`;
+  }
+  function storeLink(availability2, source, id) {
+    for (const code of [source, ...METADATA_FALLBACK_ORDER.filter((c) => c !== source)]) {
+      const url = availability2.info(code, id)?.url;
+      if (url) return url;
+    }
+    return "";
+  }
+  function libraryCsv({ library, availability: availability2, source, scope, now = Date.now() }) {
+    const destinations = COUNTRY_CODES.filter((code) => code !== source);
+    const settled = new Map(destinations.map((code) => [code, pairStatus(availability2, source, code)]));
+    const header = [
+      "Name",
+      "In the App Store as",
+      "Category",
+      "Platform",
+      "Last used",
+      "Paid",
+      "Subscription",
+      ...destinations.map((code) => getCountry(code).name),
+      "App Store link"
+    ];
+    const rows2 = appsInScope(library, scope).map((app) => {
+      const row3 = describeApp(app, null, { source, target: source, availability: availability2, library });
+      return {
+        sortName: row3.name,
+        fields: [
+          row3.name,
+          row3.storeName,
+          row3.genre,
+          PLATFORM_LABELS[row3.platform] ?? "",
+          isoDay(row3.lastActivity),
+          row3.spent ? formatTotals(row3.spent) : "",
+          row3.badge ? BADGES[row3.badge] : "",
+          ...destinations.map(
+            (code) => settled.get(code) === "done" ? CSV_STATUS[statusOf(app.id, source, code, availability2.knowledge)] : CSV_STATUS[settled.get(code)]
+          ),
+          storeLink(availability2, source, app.id)
+        ]
+      };
+    }).sort((a, b) => collator2.compare(a.sortName, b.sortName)).map((row3) => row3.fields);
+    return { name: csvName(source, scope, now), text: csvText([header, ...rows2]) };
+  }
+
+  // src/js/email.js
+  var FLAG = "libertyscan.signedUp";
+  function isEmail(value) {
+    return /^[^\s@]+@[^\s@.]+(\.[^\s@.]+)+$/.test(String(value ?? "").trim());
+  }
+  function browserStorage() {
+    try {
+      return window.localStorage;
+    } catch {
+      return null;
+    }
+  }
+  function hasSignedUp(storage2) {
+    try {
+      return storage2?.getItem(FLAG) === "1";
+    } catch {
+      return false;
+    }
+  }
+  function rememberSignUp(storage2) {
+    try {
+      storage2?.setItem(FLAG, "1");
+    } catch {
+    }
+  }
+  async function sendAddress(email, { form = SIGNUP, fetchImpl = globalThis.fetch, timeoutMs = 1e4 } = {}) {
+    if (!form.endpoint) return false;
+    try {
+      const response = await fetchImpl(form.endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify({ email: String(email).trim() }),
+        credentials: "omit",
+        referrerPolicy: "no-referrer",
+        redirect: "follow",
+        signal: AbortSignal.timeout?.(timeoutMs)
+      });
+      const json = await response.json().catch(() => null);
+      return response.ok && json?.success === true;
+    } catch {
+      return false;
+    }
+  }
+
+  // inline-worker:libertyscan:export-worker
+  var libertyscan_export_worker_default = '(()=>{var xe=Object.create;var Gt=Object.defineProperty;var Se=Object.getOwnPropertyDescriptor;var _e=Object.getOwnPropertyNames;var Ae=Object.getPrototypeOf,Ee=Object.prototype.hasOwnProperty;var ze=(e,t)=>()=>(t||e((t={exports:{}}).exports,t),t.exports);var ke=(e,t,i,o)=>{if(t&&typeof t=="object"||typeof t=="function")for(let a of _e(t))!Ee.call(e,a)&&a!==i&&Gt(e,a,{get:()=>t[a],enumerable:!(o=Se(t,a))||o.enumerable});return e};var Wt=(e,t,i)=>(i=e!=null?xe(Ae(e)):{},ke(t||!e||!e.__esModule?Gt(i,"default",{value:e,enumerable:!0}):i,e));var Lt=ze((Mt,Ft)=>{/* @license\nPapa Parse\nv5.7.0\nhttps://github.com/mholt/PapaParse\nLicense: MIT\n*/((e,t)=>{typeof define=="function"&&define.amd?define([],t):typeof Ft=="object"&&typeof Mt<"u"?Ft.exports=t():e.Papa=t()})(Mt,function e(){var t=typeof self<"u"?self:typeof window<"u"?window:t!==void 0?t:{},i=!t.document&&!!t.postMessage,o=t.IS_PAPA_WORKER||!1,a={},m=0,u={};function k(n){return n.charCodeAt(0)===65279?n.slice(1):n}function M(n){this._handle=null,this._finished=!1,this._completed=!1,this._halted=!1,this._input=null,this._baseIndex=0,this._partialLine="",this._rowCount=0,this._start=0,this._nextChunk=null,this.isFirstChunk=!0,this._completeResults={data:[],errors:[],meta:{}},(function(r){var s=T(r);s.chunkSize=parseInt(s.chunkSize),r.step||r.chunk||(s.chunkSize=null),this._handle=new G(s),(this._handle.streamer=this)._config=s}).call(this,n),this.parseChunk=function(r,s){var c=parseInt(this._config.skipFirstNLines)||0;if(this.isFirstChunk&&0<c){let v=this._config.newline;v||(h=this._config.quoteChar||\'"\',v=this._handle.guessLineEndings(r,h)),r=[...r.split(v).slice(c)].join(v)}this.isFirstChunk&&F(this._config.beforeFirstChunk)&&(h=this._config.beforeFirstChunk(r))!==void 0&&(r=h),this.isFirstChunk=!1,this._halted=!1;var c=this._partialLine+r,h=(this._partialLine="",this._handle.parse(c,this._baseIndex,!this._finished));if(!this._handle.paused()&&!this._handle.aborted()){if(r=h.meta.cursor,c=(this._finished||(this._partialLine=c.substring(r-this._baseIndex),this._baseIndex=r),h&&h.data&&(this._rowCount+=h.data.length),this._finished||this._config.preview&&this._rowCount>=this._config.preview),o)t.postMessage({results:h,workerId:u.WORKER_ID,finished:c});else if(F(this._config.chunk)&&!s){if(this._config.chunk(h,this._handle),this._handle.paused()||this._handle.aborted())return void(this._halted=!0);this._completeResults=h=void 0}return this._config.step||this._config.chunk||(this._completeResults.data=this._completeResults.data.concat(h.data),this._completeResults.errors=this._completeResults.errors.concat(h.errors),this._completeResults.meta=h.meta),this._completed||!c||!F(this._config.complete)||h&&h.meta.aborted||(this._config.complete(this._completeResults,this._input),this._completed=!0),c||h&&h.meta.paused||this._nextChunk(),h}this._halted=!0},this._sendError=function(r){F(this._config.error)?this._config.error(r):o&&this._config.error&&t.postMessage({workerId:u.WORKER_ID,error:r,finished:!1})}}function z(n){var r;(n=n||{}).chunkSize||(n.chunkSize=u.RemoteChunkSize),M.call(this,n),this._nextChunk=i?function(){this._readChunk(),this._chunkLoaded()}:function(){this._readChunk()},this.stream=function(s){this._input=s,this._nextChunk()},this._readChunk=function(){if(this._finished)this._chunkLoaded();else{if(r=new XMLHttpRequest,this._config.withCredentials&&(r.withCredentials=this._config.withCredentials),i||(r.onload=q(this._chunkLoaded,this),r.onerror=q(this._chunkError,this)),r.ontimeout=q(this._chunkTimeout,this),r.open(this._config.downloadRequestBody?"POST":"GET",this._input,!i),this._config.downloadTimeout&&!i&&(r.timeout=this._config.downloadTimeout),this._config.downloadRequestHeaders){var s,c=this._config.downloadRequestHeaders;for(s in c)r.setRequestHeader(s,c[s])}var h;this._config.chunkSize&&(h=this._start+this._config.chunkSize-1,r.setRequestHeader("Range","bytes="+this._start+"-"+h));try{r.send(this._config.downloadRequestBody)}catch(v){this._chunkError(v.message)}i&&r.status===0&&this._chunkError()}},this._chunkLoaded=function(){r.readyState===4&&(r.status<200||400<=r.status?this._chunkError():(this._start+=this._config.chunkSize||r.responseText.length,this._finished=!this._config.chunkSize||this._start>=(s=>(s=s.getResponseHeader("Content-Range"))!==null?parseInt(s.substring(s.lastIndexOf("/")+1)):-1)(r),this.parseChunk(r.responseText)))},this._chunkError=function(s){s=r.statusText||s,this._sendError(new Error(s))},this._chunkTimeout=function(){this._chunkError("Request timed out after "+this._config.downloadTimeout+"ms")}}function C(n){(n=n||{}).chunkSize||(n.chunkSize=u.LocalChunkSize),M.call(this,n);var r,s,c=typeof FileReader<"u";this.stream=function(h){this._input=h,s=h.slice||h.webkitSlice||h.mozSlice,c?((r=new FileReader).onload=q(this._chunkLoaded,this),r.onerror=q(this._chunkError,this)):r=new FileReaderSync,this._nextChunk()},this._nextChunk=function(){this._finished||this._config.preview&&!(this._rowCount<this._config.preview)||this._readChunk()},this._readChunk=function(){var h=this._input,v=(this._config.chunkSize&&(v=Math.min(this._start+this._config.chunkSize,this._input.size),h=s.call(h,this._start,v)),r.readAsText(h,this._config.encoding));c||this._chunkLoaded({target:{result:v}})},this._chunkLoaded=function(h){this._start+=this._config.chunkSize,this._finished=!this._config.chunkSize||this._start>=this._input.size,this.parseChunk(h.target.result)},this._chunkError=function(){this._sendError(r.error)}}function f(n){var r;M.call(this,n=n||{}),this.stream=function(s){return r=s,this._nextChunk()},this._nextChunk=function(){var s,c;if(!this._finished)return s=this._config.chunkSize,r=s?(c=r.substring(0,s),r.substring(s)):(c=r,""),this._finished=!r,this.parseChunk(c)}}function y(n){M.call(this,n=n||{});var r=[],s=!0,c=!1;this.pause=function(){M.prototype.pause.apply(this,arguments),this._input.pause()},this.resume=function(){M.prototype.resume.apply(this,arguments),this._input.resume()},this.stream=function(h){this._input=h,this._input.on("data",this._streamData),this._input.on("end",this._streamEnd),this._input.on("error",this._streamError)},this._checkIsFinished=function(){c&&r.length===1&&(this._finished=!0)},this._nextChunk=function(){this._checkIsFinished(),r.length?this.parseChunk(r.shift()):s=!0},this._streamData=q(function(h){try{r.push(typeof h=="string"?h:h.toString(this._config.encoding)),s&&(s=!1,this._checkIsFinished(),this.parseChunk(r.shift()))}catch(v){this._streamError(v)}},this),this._streamError=q(function(h){this._streamCleanUp(),this._sendError(h)},this),this._streamEnd=q(function(){this._streamCleanUp(),c=!0,this._streamData("")},this),this._streamCleanUp=q(function(){this._input.removeListener("data",this._streamData),this._input.removeListener("end",this._streamEnd),this._input.removeListener("error",this._streamError)},this)}function G(n){var r,s,c,h,v=Math.pow(2,53),W=-v,st=/^\\s*-?(\\d+\\.?|\\.\\d+|\\d+\\.\\d+)([eE][-+]?\\d+)?\\s*$/,at=/^((\\d{4}-[01]\\d-[0-3]\\dT[0-2]\\d:[0-5]\\d:[0-5]\\d\\.\\d+([+-][0-2]\\d:[0-5]\\d|Z))|(\\d{4}-[01]\\d-[0-3]\\dT[0-2]\\d:[0-5]\\d:[0-5]\\d([+-][0-2]\\d:[0-5]\\d|Z))|(\\d{4}-[01]\\d-[0-3]\\dT[0-2]\\d:[0-5]\\d([+-][0-2]\\d:[0-5]\\d|Z)))$/,L=this,H=0,g=0,Q=!1,d=!1,S=[],p={data:[],errors:[],meta:{}};function V(_){return n.skipEmptyLines==="greedy"?_.join("").trim()==="":_.length===1&&_[0].length===0}function I(){if(p&&c&&(X("Delimiter","UndetectableDelimiter","Unable to auto-detect delimiting character; defaulted to \'"+u.DefaultDelimiter+"\'"),c=!1),n.skipEmptyLines&&(p.data=p.data.filter(function(N){return!V(N)})),j()){let N=function(K){S.push(K)};var w=N;if(p)if(Array.isArray(p.data[0])){for(var _=0;j()&&_<p.data.length;_++)p.data[_].forEach(N);p.data.splice(0,1)}else p.data.forEach(N)}function x(N,K){for(var P=n.header?{}:[],O=0;O<N.length;O++){var E=O,et=N[O],et=((R,Z)=>(J=>(n.dynamicTypingFunction&&n.dynamicTyping[J]===void 0&&(n.dynamicTyping[J]=n.dynamicTypingFunction(J)),(n.dynamicTyping[J]||n.dynamicTyping)===!0))(R)?Z==="true"||Z==="TRUE"||Z!=="false"&&Z!=="FALSE"&&((J=>{if(st.test(J)&&(J=parseFloat(J),W<J&&J<v))return 1})(Z)?parseFloat(Z):at.test(Z)?new Date(Z):Z===""?null:Z):Z)(E=n.header?O>=S.length?"__parsed_extra":S[O]:E,et=n.transform?n.transform(et,E):et);E==="__parsed_extra"?(P[E]=P[E]||[],P[E].push(et)):P[E]=et}return n.header&&(O>S.length?X("FieldMismatch","TooManyFields","Too many fields: expected "+S.length+" fields but parsed "+O,g+K):O<S.length&&X("FieldMismatch","TooFewFields","Too few fields: expected "+S.length+" fields but parsed "+O,g+K)),P}var B;p&&(n.header||n.dynamicTyping||n.transform)&&(B=1,!p.data.length||Array.isArray(p.data[0])?(p.data=p.data.map(x),B=p.data.length):p.data=x(p.data,0),n.header&&p.meta&&(p.meta.fields=S),g+=B)}function j(){return n.header&&S.length===0}function X(_,x,B,w){_={type:_,code:x,message:B},w!==void 0&&(_.row=w),p.errors.push(_)}F(n.step)&&(h=n.step,n.step=function(_){p=_,j()?I():(I(),p.data.length!==0&&(H+=_.data.length,n.preview&&H>n.preview?s.abort():(p.data=p.data[0],h(p,L))))}),this.parse=function(_,x,B){var w=n.quoteChar||\'"\',w=(n.newline||(n.newline=this.guessLineEndings(_,w)),c=!1,n.delimiter?F(n.delimiter)&&(n.delimiter=n.delimiter(_),p.meta.delimiter=n.delimiter):((w=((N,K,P,O,E)=>{var et,R,Z,J;E=E||[",","	","|",";",u.RECORD_SEP,u.UNIT_SEP];for(var yt=0;yt<E.length;yt++){for(var ft,_t=E[yt],tt=0,ht=0,Y=0,it=(Z=void 0,new l({comments:O,delimiter:_t,newline:K,preview:10}).parse(N)),ct=0;ct<it.data.length;ct++)P&&V(it.data[ct])?Y++:(ft=it.data[ct].length,ht+=ft,Z===void 0?Z=ft:0<ft&&(tt+=Math.abs(ft-Z),Z=ft));0<it.data.length&&(ht/=it.data.length-Y),1.99<ht&&(R===void 0||tt<R||tt===R&&J<ht)&&(R=tt,et=_t,J=ht)}return{successful:!!(n.delimiter=et),bestDelimiter:et}})(_,n.newline,n.skipEmptyLines,n.comments,n.delimitersToGuess)).successful?n.delimiter=w.bestDelimiter:(c=!0,n.delimiter=u.DefaultDelimiter),p.meta.delimiter=n.delimiter),T(n));return w.header=j(),n.preview&&n.header&&w.preview++,r=_,s=new l(w),p=s.parse(r,x,B),I(),Q?{meta:{paused:!0}}:p||{meta:{paused:!1}}},this.paused=function(){return Q},this.pause=function(){Q=!0,s.abort(),r=F(n.chunk)?"":r.substring(s.getCharIndex())},this.resume=function(){L.streamer._halted?(Q=!1,L.streamer.parseChunk(r,!0)):setTimeout(L.resume,3)},this.aborted=function(){return d},this.abort=function(){d=!0,s.abort(),p.meta.aborted=!0,F(n.complete)&&n.complete(p),r=""},this.guessLineEndings=function(N,w){N=N.substring(0,1048576);var w=new RegExp($(w)+"([^]*?)"+$(w),"gm"),B=(N=N.replace(w,"")).split("\\r"),w=N.split(`\n`),N=1<w.length&&w[0].length<B[0].length;if(B.length===1||N)return`\n`;for(var K=0,P=0;P<B.length;P++)B[P][0]===`\n`&&K++;return K>=B.length/2?`\\r\n`:"\\r"}}function $(n){return n.replace(/[.*+?^${}()|[\\]\\\\]/g,"\\\\$&")}function l(n){var r=(n=n||{}).delimiter,s=n.newline,c=n.comments,h=n.step,v=n.preview,W=n.fastMode,st=null,at=!1,L=n.quoteChar==null?\'"\':n.quoteChar,H=L;if(n.escapeChar!==void 0&&(H=n.escapeChar),(typeof r!="string"||-1<u.BAD_DELIMITERS.indexOf(r))&&(r=","),c===r)throw new Error("Comment character same as delimiter");c===!0?c="#":(typeof c!="string"||-1<u.BAD_DELIMITERS.indexOf(c))&&(c=!1),s!==`\n`&&s!=="\\r"&&s!==`\\r\n`&&(s=`\n`);var g=0,Q=!1;this.parse=function(d,S,p){if(typeof d!="string")throw new Error("Input must be a string");var V=d.length,I=r.length,j=s.length,X=c.length,_=F(h),x=[],B=[],w=[],N=g=0;if(!d)return tt();if(W||W!==!1&&d.indexOf(L)===-1){for(var K=d.split(s),P=0;P<K.length;P++){if(w=K[P],g+=w.length,P!==K.length-1)g+=s.length;else if(p)return tt();if(!c||w.substring(0,X)!==c){if(_){if(x=[],J(w.split(r)),ht(),Q)return tt()}else J(w.split(r));if(v&&v<=P)return x=x.slice(0,v),tt(!0)}}return tt()}for(var O=d.indexOf(r,g),E=d.indexOf(s,g),et=new RegExp($(H)+$(L),"g"),R=d.indexOf(L,g);;)if(d[g]===L)for(R=g,g++;;){if((R=d.indexOf(L,R+1))===-1)return p||B.push({type:"Quotes",code:"MissingQuotes",message:"Quoted field unterminated",row:x.length,index:g}),ft();if(R===V-1)return ft(d.substring(g,R).replace(et,L));if(L===H&&d[R+1]===H)R++;else if(L===H||R===0||d[R-1]!==H){O!==-1&&O<R+1&&(O=d.indexOf(r,R+1));var Z=yt((E=E!==-1&&E<R+1?d.indexOf(s,R+1):E)===-1?O:Math.min(O,E));if(d.substr(R+1+Z,I)===r){w.push(d.substring(g,R).replace(et,L)),d[g=R+1+Z+I]!==L&&(R=d.indexOf(L,g)),O=d.indexOf(r,g),E=d.indexOf(s,g);break}if(Z=yt(E),d.substring(R+1+Z,R+1+Z+j)===s){if(w.push(d.substring(g,R).replace(et,L)),_t(R+1+Z+j),O=d.indexOf(r,g),R=d.indexOf(L,g),_&&(ht(),Q))return tt();if(v&&x.length>=v)return tt(!0);break}B.push({type:"Quotes",code:"InvalidQuotes",message:"Trailing quote on quoted field is malformed",row:x.length,index:g}),R++}}else if(c&&w.length===0&&d.substring(g,g+X)===c){if(E===-1)return tt();g=E+j,E=d.indexOf(s,g),O=d.indexOf(r,g)}else if(O!==-1&&(O<E||E===-1))w.push(d.substring(g,O)),g=O+I,O=d.indexOf(r,g);else{if(E===-1)break;if(w.push(d.substring(g,E)),_t(E+j),_&&(ht(),Q))return tt();if(v&&x.length>=v)return tt(!0)}return ft();function J(Y){x.push(Y),N=g}function yt(Y){var it=0;return it=Y!==-1&&(Y=d.substring(R+1,Y))&&Y.trim()===""?Y.length:it}function ft(Y){return p||(Y===void 0&&(Y=d.substring(g)),w.push(Y),g=V,J(w),_&&ht()),tt()}function _t(Y){g=Y,J(w),w=[],E=d.indexOf(s,g)}function tt(Y){if(n.header&&!S&&x.length&&!at){var it=x[0],ct=Object.create(null),Ut=new Set(it);let $t=!1;for(let wt=0;wt<it.length;wt++){let lt=k(it[wt]);if(ct[lt=F(n.transformHeader)?n.transformHeader(lt,wt):lt]){let At,Kt=ct[lt];for(;At=lt+"_"+Kt,Kt++,Ut.has(At););Ut.add(At),it[wt]=At,ct[lt]++,$t=!0,(st=st===null?{}:st)[At]=lt}else ct[lt]=1,it[wt]=lt;Ut.add(lt)}$t&&console.warn("Duplicate headers found and renamed."),at=!0}return{data:x,errors:B,meta:{delimiter:r,linebreak:s,aborted:Q,truncated:!!Y,cursor:N+(S||0),renamedHeaders:st}}}function ht(){h(tt()),x=[],B=[]}},this.abort=function(){Q=!0},this.getCharIndex=function(){return g}}function A(n){var r=n.data,s=a[r.workerId],c=!1;if(r.error)s.userError(r.error,r.file);else if(r.results&&r.results.data){var h={abort:function(){c=!0,D(r.workerId,{data:[],errors:[],meta:{aborted:!0}})},pause:b,resume:b};if(F(s.userStep)){for(var v=0;v<r.results.data.length&&(s.userStep({data:r.results.data[v],errors:r.results.errors,meta:r.results.meta},h),!c);v++);delete r.results}else F(s.userChunk)&&(s.userChunk(r.results,h,r.file),delete r.results)}r.finished&&!c&&D(r.workerId,r.results)}function D(n,r){var s=a[n];F(s.userComplete)&&s.userComplete(r),s.terminate(),delete a[n]}function b(){throw new Error("Not implemented.")}function T(n){if(typeof n!="object"||n===null)return n;var r,s=Array.isArray(n)?[]:{};for(r in n)s[r]=T(n[r]);return s}function q(n,r){return function(){n.apply(r,arguments)}}function F(n){return typeof n=="function"}return u.parse=function(n,r){var s=(r=r||{}).dynamicTyping||!1;if(F(s)&&(r.dynamicTypingFunction=s,s={}),r.dynamicTyping=s,r.transform=!!F(r.transform)&&r.transform,r.downloadTimeout!==void 0){var s=parseInt(r.downloadTimeout);if(isNaN(s))throw new Error("Config downloadTimeout value ("+r.downloadTimeout+") not parsable by parseInt(val).");r.downloadTimeout=s}if(!r.worker||!u.WORKERS_SUPPORTED)return s=null,u.NODE_STREAM_INPUT,typeof n=="string"?(n=k(n),s=new(r.download?z:f)(r)):n.readable===!0&&F(n.read)&&F(n.on)?s=new y(r):(t.File&&n instanceof File||n instanceof Object)&&(s=new C(r)),s.stream(n);(s=(()=>{var c;return!!u.WORKERS_SUPPORTED&&(c=(()=>{var h=t.URL||t.webkitURL||null,v=e.toString();return u.BLOB_URL||(u.BLOB_URL=h.createObjectURL(new Blob(["var global = (function() { if (typeof self !== \'undefined\') { return self; } if (typeof window !== \'undefined\') { return window; } if (typeof global !== \'undefined\') { return global; } return {}; })(); global.IS_PAPA_WORKER=true; ","(",v,")();"],{type:"text/javascript"})))})(),(c=new t.Worker(c)).onmessage=A,c.id=m++,a[c.id]=c)})()).userStep=r.step,s.userChunk=r.chunk,s.userComplete=r.complete,s.userError=r.error,r.step=F(r.step),r.chunk=F(r.chunk),r.complete=F(r.complete),r.error=F(r.error),delete r.worker,s.postMessage({input:n,config:r,workerId:s.id})},u.unparse=function(n,r){var s=!1,c=!0,h=",",v=`\\r\n`,W=\'"\',st=W+W,at=!1,L=null,H=!1,g=((()=>{if(typeof r=="object"){if(typeof r.delimiter!="string"||u.BAD_DELIMITERS.filter(function(S){return r.delimiter.indexOf(S)!==-1}).length||(h=r.delimiter),typeof r.quotes!="boolean"&&typeof r.quotes!="function"&&!Array.isArray(r.quotes)||(s=r.quotes),typeof r.skipEmptyLines!="boolean"&&typeof r.skipEmptyLines!="string"||(at=r.skipEmptyLines),typeof r.newline=="string"&&(v=r.newline),typeof r.quoteChar=="string"&&(W=r.quoteChar,st=W+W),typeof r.header=="boolean"&&(c=r.header),Array.isArray(r.columns)){if(r.columns.length===0)throw new Error("Option columns is empty");L=r.columns}r.escapeChar!==void 0&&(st=r.escapeChar+W),r.escapeFormulae instanceof RegExp?H=r.escapeFormulae:typeof r.escapeFormulae=="boolean"&&r.escapeFormulae&&(H=/^[=+\\-@\\t\\r].*$/)}})(),new RegExp($(W),"g"));if(typeof n=="string"&&(n=JSON.parse(n)),Array.isArray(n)){if(!n.length||Array.isArray(n[0]))return Q(null,n,at);if(typeof n[0]=="object")return Q(L||Object.keys(n[0]),n,at)}else if(typeof n=="object")return typeof n.data=="string"&&(n.data=JSON.parse(n.data)),Array.isArray(n.data)&&(n.fields||(n.fields=n.meta&&n.meta.fields||L),n.fields||(n.fields=Array.isArray(n.data[0])?n.fields:typeof n.data[0]=="object"?Object.keys(n.data[0]):[]),Array.isArray(n.data[0])||typeof n.data[0]=="object"||(n.data=[n.data])),Q(n.fields||[],n.data||[],at);throw new Error("Unable to serialize unrecognized input");function Q(S,p,V){var I="",j=(typeof S=="string"&&(S=JSON.parse(S)),typeof p=="string"&&(p=JSON.parse(p)),Array.isArray(S)&&0<S.length),X=!Array.isArray(p[0]);if(j&&c){for(var _=0;_<S.length;_++)0<_&&(I+=h),I+=d(S[_],_);0<p.length&&(I+=v)}for(var x=0;x<p.length;x++){var B=(j?S:p[x]).length,w=!1,N=j?Object.keys(p[x]).length===0:p[x].length===0;if(V&&!j&&(w=V==="greedy"?p[x].join("").trim()==="":p[x].length===1&&p[x][0].length===0),V==="greedy"&&j){for(var K=[],P=0;P<B;P++){var O=X?S[P]:P;K.push(p[x][O])}w=K.join("").trim()===""}if(!w){for(var E=0;E<B;E++){0<E&&!N&&(I+=h);var et=j&&X?S[E]:E;I+=d(p[x][et],E)}x<p.length-1&&(!V||0<B&&!N)&&(I+=v)}}return I}function d(S,p){var V,I,j;return S==null?"":S.constructor===Date?isNaN(S.getTime())?"":S.toISOString():(j=!1,H&&typeof S=="string"&&H.test(S)&&(S="\'"+S,j=!0),I=(V=S.toString()).replace(g,st),(j=j||s===!0||typeof s=="function"&&s(S,p)||Array.isArray(s)&&s[p]||((X,_)=>{for(var x=0;x<_.length;x++)if(-1<X.indexOf(_[x]))return!0;return!1})(I,u.BAD_DELIMITERS)||-1<I.indexOf(h)||-1<V.indexOf(W)||I.charAt(0)===" "||I.charAt(I.length-1)===" ")?W+I+W:I)}},u.RECORD_SEP="",u.UNIT_SEP="",u.BYTE_ORDER_MARK="\\uFEFF",u.BAD_DELIMITERS=["\\r",`\n`,\'"\',u.BYTE_ORDER_MARK],u.WORKERS_SUPPORTED=!i&&!!t.Worker,u.NODE_STREAM_INPUT=1,u.LocalChunkSize=10485760,u.RemoteChunkSize=5242880,u.DefaultDelimiter=",",u.Parser=l,u.ParserHandle=G,u.NetworkStreamer=z,u.FileStreamer=C,u.StringStreamer=f,u.ReadableStreamStreamer=y,o&&(t.onmessage=function(n){n=n.data,u.WORKER_ID===void 0&&n&&(u.WORKER_ID=n.workerId),typeof n.input=="string"?t.postMessage({workerId:u.WORKER_ID,results:u.parse(n.input,n.config),finished:!0}):(t.File&&n.input instanceof File||n.input instanceof Object)&&(n=u.parse(n.input,n.config))&&t.postMessage({workerId:u.WORKER_ID,results:n,finished:!0})}),(z.prototype=Object.create(M.prototype)).constructor=z,(C.prototype=Object.create(M.prototype)).constructor=C,(f.prototype=Object.create(f.prototype)).constructor=f,(y.prototype=Object.create(M.prototype)).constructor=y,u})});var ye=Wt(Lt(),1);var be=/(?:Z|[+-]\\d{2}:?\\d{2})$/i;function Nt(e){if(e==null)return null;if(typeof e=="number")return Number.isFinite(e)?e:null;let t=String(e).trim();if(!t)return null;let i=/^\\d{4}-\\d{2}-\\d{2}T/.test(t)&&!be.test(t)?`${t}Z`:t,o=Date.parse(i);return Number.isNaN(o)?null:o}var Jt=Object.freeze([{code:"fr",name:"France",phrase:"France",adjective:"French",storefront:"France"},{code:"de",name:"Germany",phrase:"Germany",adjective:"German",storefront:"Germany"},{code:"jp",name:"Japan",phrase:"Japan",adjective:"Japanese",storefront:"Japan"},{code:"nl",name:"Netherlands",phrase:"the Netherlands",adjective:"Dutch",storefront:"Netherlands"},{code:"gb",name:"United Kingdom",phrase:"the United Kingdom",adjective:"UK",storefront:"United Kingdom"},{code:"us",name:"United States",phrase:"the United States",adjective:"US",storefront:"United States"}].map(e=>Object.freeze(e))),cn=Jt.map(e=>e.code),pn=new Map(Jt.map(e=>[e.code,e]));var Ce=/[    ]/g;function vt(e){return String(e??"").replace(Ce," ").replace(/\\s+/g," ").trim()}var De=/^\\d{1,12}$/;function bt(e){return De.test(String(e??"").trim())}function Ct(e,t,i,o){let a=e.get(t);if(!a){e.set(t,{id:t,name:i,lastActivity:o});return}o!==null&&(a.lastActivity===null||o>=a.lastActivity)?(a.lastActivity=o,i&&(a.name=i)):!a.name&&i&&(a.name=i)}var Te=[["€","EUR"],["£","GBP"],["¥","JPY"],["$","USD"]],Bt=new Map;function Ie(e){if(!Bt.has(e)){let t=2;try{t=new Intl.NumberFormat("en",{style:"currency",currency:e}).resolvedOptions().maximumFractionDigits}catch{}Bt.set(e,t)}return Bt.get(e)}function Dt(e,t=""){let i=String(e??"").trim();if(!/\\d/.test(i))return null;let o=String(t??"").trim().toUpperCase();if(/^[A-Z]{3}$/.test(o)||(o=Te.find(([y])=>i.includes(y))?.[1]??""),!o)return null;let a=i.replace(/[^\\d.,]/g,""),m=Ie(o),u=Math.max(a.lastIndexOf("."),a.lastIndexOf(",")),k=u<0?"":a.slice(u+1),M=u>=0&&m>0&&k.length>=1&&k.length<=m,z=(M?a.slice(0,u):a).replace(/[.,]/g,"")||"0",C=M?k.padEnd(m,"0"):"0",f=Number(z)*10**m+Number(C);return Number.isSafeInteger(f)?{currency:o,minor:/^[^\\d]*-/.test(i)?-f:f}:null}function Yt(e,t){return!t||!t.minor||e.set(t.currency,(e.get(t.currency)??0)+t.minor),e}var nt=Uint8Array,xt=Uint16Array,Oe=Int32Array,Qt=new nt([0,0,0,0,0,0,0,0,1,1,1,1,2,2,2,2,3,3,3,3,4,4,4,4,5,5,5,5,0,0,0,0]),Vt=new nt([0,0,0,0,1,1,2,2,3,3,4,4,5,5,6,6,7,7,8,8,9,9,10,10,11,11,12,12,13,13,0,0]),Re=new nt([16,17,18,0,8,7,9,6,10,5,11,4,12,3,13,2,14,1,15]),Xt=function(e,t){for(var i=new xt(31),o=0;o<31;++o)i[o]=t+=1<<e[o-1];for(var a=new Oe(i[30]),o=1;o<30;++o)for(var m=i[o];m<i[o+1];++m)a[m]=m-i[o]<<5|o;return{b:i,r:a}},te=Xt(Qt,2),ee=te.b,Ue=te.r;ee[28]=258,Ue[258]=28;var ne=Xt(Vt,0),Me=ne.b,En=ne.r,Zt=new xt(32768);for(U=0;U<32768;++U)pt=(U&43690)>>1|(U&21845)<<1,pt=(pt&52428)>>2|(pt&13107)<<2,pt=(pt&61680)>>4|(pt&3855)<<4,Zt[U]=((pt&65280)>>8|(pt&255)<<8)>>1;var pt,U,Et=(function(e,t,i){for(var o=e.length,a=0,m=new xt(t);a<o;++a)e[a]&&++m[e[a]-1];var u=new xt(t);for(a=1;a<t;++a)u[a]=u[a-1]+m[a-1]<<1;var k;if(i){k=new xt(1<<t);var M=15-t;for(a=0;a<o;++a)if(e[a])for(var z=a<<4|e[a],C=t-e[a],f=u[e[a]-1]++<<C,y=f|(1<<C)-1;f<=y;++f)k[Zt[f]>>M]=z}else for(k=new xt(o),a=0;a<o;++a)e[a]&&(k[a]=Zt[u[e[a]-1]++]>>15-e[a]);return k}),zt=new nt(288);for(U=0;U<144;++U)zt[U]=8;var U;for(U=144;U<256;++U)zt[U]=9;var U;for(U=256;U<280;++U)zt[U]=7;var U;for(U=280;U<288;++U)zt[U]=8;var U,re=new nt(32);for(U=0;U<32;++U)re[U]=5;var U;var Fe=Et(zt,9,1);var Le=Et(re,5,1),Pt=function(e){for(var t=e[0],i=1;i<e.length;++i)e[i]>t&&(t=e[i]);return t},ot=function(e,t,i){var o=t/8|0;return(e[o]|e[o+1]<<8)>>(t&7)&i},jt=function(e,t){var i=t/8|0;return(e[i]|e[i+1]<<8|e[i+2]<<16)>>(t&7)},Ne=function(e){return(e+7)/8|0},Tt=function(e,t,i){return(t==null||t<0)&&(t=0),(i==null||i>e.length)&&(i=e.length),new nt(e.subarray(t,i))};var Be=["unexpected EOF","invalid block type","invalid length/literal","invalid distance","stream finished","no stream handler",,"no callback","invalid UTF-8 data","extra field too long","date not in range 1980-2099","filename too long","stream finishing","invalid zip data"],ut=function(e,t,i){var o=new Error(t||Be[e]);if(o.code=e,Error.captureStackTrace&&Error.captureStackTrace(o,ut),!i)throw o;return o},Pe=function(e,t,i,o){var a=e.length,m=o?o.length:0;if(!a||t.f&&!t.l)return i||new nt(0);var u=!i,k=u||t.i!=2,M=t.i;u&&(i=new nt(a*3));var z=function(K){var P=i.length;if(K>P){var O=new nt(Math.max(P*2,K));O.set(i),i=O}},C=t.f||0,f=t.p||0,y=t.b||0,G=t.l,$=t.d,l=t.m,A=t.n,D=a*8;do{if(!G){C=ot(e,f,1);var b=ot(e,f+1,3);if(f+=3,b)if(b==1)G=Fe,$=Le,l=9,A=5;else if(b==2){var n=ot(e,f,31)+257,r=ot(e,f+10,15)+4,s=n+ot(e,f+5,31)+1;f+=14;for(var c=new nt(s),h=new nt(19),v=0;v<r;++v)h[Re[v]]=ot(e,f+v*3,7);f+=r*3;for(var W=Pt(h),st=(1<<W)-1,at=Et(h,W,1),v=0;v<s;){var L=at[ot(e,f,st)];f+=L&15;var T=L>>4;if(T<16)c[v++]=T;else{var H=0,g=0;for(T==16?(g=3+ot(e,f,3),f+=2,H=c[v-1]):T==17?(g=3+ot(e,f,7),f+=3):T==18&&(g=11+ot(e,f,127),f+=7);g--;)c[v++]=H}}var Q=c.subarray(0,n),d=c.subarray(n);l=Pt(Q),A=Pt(d),G=Et(Q,l,1),$=Et(d,A,1)}else ut(1);else{var T=Ne(f)+4,q=e[T-4]|e[T-3]<<8,F=T+q;if(F>a){M&&ut(0);break}k&&z(y+q),i.set(e.subarray(T,F),y),t.b=y+=q,t.p=f=F*8,t.f=C;continue}if(f>D){M&&ut(0);break}}k&&z(y+131072);for(var S=(1<<l)-1,p=(1<<A)-1,V=f;;V=f){var H=G[jt(e,f)&S],I=H>>4;if(f+=H&15,f>D){M&&ut(0);break}if(H||ut(2),I<256)i[y++]=I;else if(I==256){V=f,G=null;break}else{var j=I-254;if(I>264){var v=I-257,X=Qt[v];j=ot(e,f,(1<<X)-1)+ee[v],f+=X}var _=$[jt(e,f)&p],x=_>>4;_||ut(3),f+=_&15;var d=Me[x];if(x>3){var X=Vt[x];d+=jt(e,f)&(1<<X)-1,f+=X}if(f>D){M&&ut(0);break}k&&z(y+131072);var B=y+j;if(y<d){var w=m-d,N=Math.min(d,B);for(w+y<0&&ut(3);y<N;++y)i[y]=o[w+y]}for(;y<B;++y)i[y]=i[y-d]}}t.l=G,t.p=V,t.b=y,t.f=C,G&&(C=1,t.m=l,t.d=$,t.n=A)}while(!C);return y!=i.length&&u?Tt(i,0,y):i.subarray(0,y)};var je=new nt(0);var ie=(function(){function e(t,i){typeof t=="function"&&(i=t,t={}),this.ondata=i;var o=t&&t.dictionary&&t.dictionary.subarray(-32768);this.s={i:0,b:o?o.length:0},this.o=new nt(32768),this.p=new nt(0),o&&this.o.set(o)}return e.prototype.e=function(t){if(this.ondata||ut(5),this.d&&ut(4),!this.p.length)this.p=t;else if(t.length){var i=new nt(this.p.length+t.length);i.set(this.p),i.set(t,this.p.length),this.p=i}},e.prototype.c=function(t){this.s.i=+(this.d=t||!1);var i=this.s.b,o=Pe(this.p,this.s,this.o);this.ondata(Tt(o,i,this.s.b),this.d),this.o=Tt(o,this.s.b-32768),this.s.b=this.o.length,this.p=Tt(this.p,this.s.p/8|0),this.s.p&=7},e.prototype.push=function(t,i){this.e(t),this.c(i)},e})();var Ze=typeof TextDecoder<"u"&&new TextDecoder,qe=0;try{Ze.decode(je,{stream:!0}),qe=1}catch{}var se=67324752,He=33639248,ae=101010256,$e=101075792,Ke=117853008,Ge=64*1024,We=8*1024,dt=class extends Error{constructor(t){super(t),this.name="ZipError"}},Je=new TextDecoder("utf-8");async function St(e,t,i){return new Uint8Array(await e.slice(t,i).arrayBuffer())}var kt=e=>new DataView(e.buffer,e.byteOffset,e.byteLength),gt=(e,t)=>e.getUint32(t,!0)+e.getUint32(t+4,!0)*2**32;async function oe(e){if(e.size<22)return!1;let t=kt(await St(e,0,4)).getUint32(0,!0);return t===se||t===ae}async function ue(e){let t=Math.max(0,e.size-22-65535),i=await St(e,t,e.size),o=kt(i),a=-1;for(let y=i.length-22;y>=0;y-=1)if(o.getUint32(y,!0)===ae){a=y;break}if(a<0)throw new dt("not a ZIP archive");let m=o.getUint16(a+10,!0),u=o.getUint32(a+12,!0),k=o.getUint32(a+16,!0);if(m===65535||u===4294967295||k===4294967295){let y=a-20;if(y<0||o.getUint32(y,!0)!==Ke)throw new dt("ZIP64 locator missing");let G=gt(o,y+8),$=kt(await St(e,G,G+56));if($.getUint32(0,!0)!==$e)throw new dt("ZIP64 end record missing");m=gt($,32),u=gt($,40),k=gt($,48)}let M=await St(e,k,k+u),z=kt(M),C=[],f=0;for(let y=0;y<m;y+=1){if(f+46>M.length||z.getUint32(f,!0)!==He)throw new dt("damaged central directory");let G=z.getUint16(f+8,!0),$=z.getUint16(f+10,!0),l=z.getUint32(f+20,!0),A=z.getUint32(f+24,!0),D=z.getUint16(f+28,!0),b=z.getUint16(f+30,!0),T=z.getUint16(f+32,!0),q=z.getUint32(f+42,!0),F=Je.decode(M.subarray(f+46,f+46+D)),n=f+46+D,r=n+b;for(;n+4<=r;){let s=z.getUint16(n,!0),c=z.getUint16(n+2,!0);if(s===1){let h=n+4;A===4294967295&&(A=gt(z,h),h+=8),l===4294967295&&(l=gt(z,h),h+=8),q===4294967295&&(q=gt(z,h))}n+=4+c}C.push({name:F,directory:F.endsWith("/"),encrypted:!!(G&1),method:$,compressedSize:l,size:A,offset:q}),f=r+T}return C}async function Ye(e,t){let i=kt(await St(e,t.offset,t.offset+30));if(i.byteLength<30||i.getUint32(0,!0)!==se)throw new dt("damaged entry");return t.offset+30+i.getUint16(26,!0)+i.getUint16(28,!0)}async function It(e,t,i,{head:o=!1}={}){let a=o?We:Ge;if(t.encrypted)throw new dt("encrypted entry");if(t.method!==0&&t.method!==8)throw new dt(`unsupported compression method ${t.method}`);let m=await Ye(e,t),u=m+t.compressedSize,k=!1,M=C=>{!k&&C.length&&i(C)===!1&&(k=!0)},z=t.method===8?new ie(M):null;for(let C=m;C<u&&!k;C+=a){let f=await St(e,C,Math.min(u,C+a));z?z.push(f,C+a>=u):M(f)}}async function fe(e,t){let i=[];return await It(e,t,o=>{i.push(o.slice())}),new Blob(i)}var he=1024*1024,Qe=2,Ot=e=>e.split("/").filter(Boolean).pop()??e;function le(e){return e.split("/").some(t=>t.startsWith(".")||t==="__MACOSX")}function ce(e){let t=e.search(/\\r?\\n/);return t<0?e:e.slice(0,t)}async function Ve(e){let t=new TextDecoder("utf-8"),i="";for(let o=0;o<e.size&&o<he&&(i+=t.decode(await e.slice(o,o+64*1024).arrayBuffer(),{stream:!0}),!/\\r?\\n/.test(i));o+=64*1024);return ce(i)}function Xe(e,t,i){return{name:Ot(t),path:t,where:i,size:e.size,head:()=>Ve(e),text:()=>e.text()}}function tn(e,t,i){return{name:Ot(t.name),path:t.name,where:i,size:t.size,async head(){let o=new TextDecoder("utf-8"),a="";return await It(e,t,m=>(a+=o.decode(m,{stream:!0}),!/\\r?\\n/.test(a)&&a.length<he),{head:!0}),ce(a)},async text(){let o=new TextDecoder("utf-8"),a=[];return await It(e,t,m=>{a.push(o.decode(m,{stream:!0}))}),a.push(o.decode()),a.join("")}}}function qt(e,t){return{name:Ot(e),path:e,where:t,size:0,unreadable:!0}}async function pe(e,t,i,o,a){let m;try{m=await ue(e)}catch{a.push(qt(t,i));return}for(let u of m)if(!(u.directory||le(u.name))){if(/\\.zip$/i.test(u.name)&&o<Qe){try{await pe(await fe(e,u),u.name,i,o+1,a)}catch{a.push(qt(u.name,i))}continue}a.push(tn(e,u,i))}}async function de(e){let t=[];for(let{file:i,path:o}of e){let a=o||i.name||"file";if(le(a))continue;let m=!1;try{m=await oe(i)}catch{t.push(qt(a,""));continue}m?await pe(i,a,Ot(a),0,t):t.push(Xe(i,a,""))}return t}var ve=Wt(Lt(),1),en={purchases:["item purchased date","item reference number","content type","container reference number","invoice item total"],updates:["activity date","item reference number","version text","seller"],subscriptions:["subscription initiated date","automatic renewal?","container reference number"],installs:["application id","installation type","store front name"]};function Ht(e){return String(e??"").replace(/^\\uFEFF/,"").replace(/[\\u00A0\\u202F]/g," ").trim().toLowerCase()}function ge(e){let{data:t}=ve.default.parse(String(e??""),{preview:1});return Array.isArray(t[0])?t[0]:[]}function me(e){let t=new Set(e.map(Ht));for(let[i,o]of Object.entries(en))if(o.every(a=>t.has(a)))return i;return null}var Rt=new Set(["ios and tvos apps","mac apps"]),nn=/^[A-Za-z0-9._-]+$/,rt=(e,t)=>String(e[t]??"").trim(),mt=(e,t)=>rt(e,t).toLowerCase();function rn(e){let t=e.currency,i=Dt(e["invoice item total"],t);if(!i)return null;let o=Dt(e["refund amount"],t);return o&&o.currency===i.currency?{currency:i.currency,minor:i.minor-Math.abs(o.minor)}:i}var sn=e=>vt(e).replace(/\\s*\\[From:[^\\]]*\\]$/i,"");function an(e){return e==="com.apple.appstore"||e.startsWith("com.apple.appstore.")}function on(){let e=new Map,t=new Map,i=new Set,o=new Set,a=new Set,m=new Map,u=new Map,k=new Map,M=new Map,z=new Set,C=null;function f(l){let A=Nt(l);return A!==null&&(C===null||A>C)&&(C=A),A}function y(l){let A=rt(l,"device identifier");A.length>=4&&!/^(.)\\1*$/.test(A)&&o.add(A)}function G(l,A,D){!bt(l)||!D||D.minor<=0||(k.has(l)||k.set(l,{price:new Map,inApp:new Map}),Yt(k.get(l)[A],D))}let $={purchases(l){let A=f(rt(l,"item purchased date"));y(l);let D=mt(l,"content type"),b=rn(l);if(D==="in-app purchases"){G(rt(l,"container reference number"),"inApp",b);return}if(D==="in-app subscription"){let q=rt(l,"item reference number");u.has(q)||u.set(q,[]),u.get(q).push({at:A,amount:b,refunded:!!Dt(l["refund amount"],l.currency)?.minor});return}if(!Rt.has(D))return;let T=rt(l,"item reference number");bt(T)&&(Ct(e,T,vt(l["item description"]),A),b&&b.minor>0&&(i.add(T),G(T,"price",b)))},updates(l){let A=f(rt(l,"activity date"));y(l);let D=l["content type"],b=mt(l,"item description");if(!Rt.has(b)&&Rt.has(mt(l,"content type"))&&(D=l["item description"],b=mt(l,"content type")),!Rt.has(b))return;let T=rt(l,"item reference number");bt(T)&&Ct(e,T,vt(D),A)},subscriptions(l){let A=rt(l,"subscription initiated date"),D=f(A);f(rt(l,"last automatic renewal enabled date")),f(rt(l,"last automatic renewal disabled date"));let b=rt(l,"item reference number");a.add(`${b}|${A}`);let T=m.get(b);T&&(D??-1/0)<(T.startedAt??-1/0)||m.set(b,{product:b,plan:sn(l["item description"]),appId:rt(l,"container reference number"),appName:vt(l["container description"]),renewing:mt(l,"automatic renewal?")==="yes",startedAt:D})},installs(l){let A=f(rt(l,"event date"));if(!an(mt(l,"origin"))||mt(l,"installation type")==="app_clip_install")return;let D=vt(l["store front name"]);D&&M.set(D,(M.get(D)??0)+1);let b=rt(l,"application id");nn.test(b)&&Ct(t,b,vt(l["app name"]),A)}};return{read(l,A){z.add(l);for(let D of A)$[l](D)},result(l){let A=null,D=0;for(let[b,T]of M)T>D&&(A=b,D=T);return{files:l,apps:[...e.values()],installs:[...t.values()].map(({id:b,name:T,lastActivity:q})=>({bundleId:b,name:T,lastActivity:q})),storefront:A,paid:i.size,subscriptionRecords:a.size,devices:o.size,spending:k,subscriptions:[...m.values()].map(b=>({...b,charges:u.get(b.product)??[]})),fileDate:C,hasUpdates:z.has("updates"),hasInstalls:z.has("installs"),hasSubscriptions:z.has("subscriptions")}}}}function un(e){let{data:t}=ye.default.parse(e,{header:!0,skipEmptyLines:"greedy",transformHeader:Ht});return t}async function we(e,{onProgress:t=()=>{}}={}){let i=await de(e),o=on(),a=[];for(let m of i){let u={name:m.name,where:m.where,kind:null,status:"unreadable",rows:0};if(a.push(u),!m.unreadable)try{if(u.kind=me(ge(await m.head())),!u.kind){u.status="ignored";continue}t({name:m.name});let k=un(await m.text());o.read(u.kind,k),u.rows=k.length,u.status="read"}catch{u.kind=null,u.status="unreadable"}}return o.result(a)}self.onmessage=async e=>{try{let t=await we(e.data.inputs,{onProgress:i=>self.postMessage({type:"progress",...i})});self.postMessage({type:"done",result:t})}catch(t){self.postMessage({type:"error",message:String(t?.message??t)})}};})();\n';
+
+  // src/js/export/start.js
+  var workerUrl = null;
+  function readInWorker(inputs, onProgress = () => {
+  }) {
+    workerUrl ?? (workerUrl = URL.createObjectURL(new Blob([libertyscan_export_worker_default], { type: "text/javascript" })));
+    return new Promise((resolve, reject) => {
+      const worker = new Worker(workerUrl);
+      const finish = (fn, value) => {
+        worker.terminate();
+        fn(value);
+      };
+      worker.onmessage = ({ data }) => {
+        if (data.type === "progress") onProgress(data);
+        else if (data.type === "done") finish(resolve, data.result);
+        else finish(reject, new Error(data.message));
+      };
+      worker.onerror = (event) => {
+        event.preventDefault();
+        finish(reject, new Error(event.message || "The file reader stopped"));
+      };
+      worker.postMessage({ inputs });
+    });
+  }
+
+  // src/js/files.js
+  function readEntries(reader) {
+    return new Promise((resolve, reject) => reader.readEntries(resolve, reject));
+  }
+  async function walk(entry, out) {
+    if (entry.isFile) {
+      try {
+        const file = await new Promise((resolve, reject) => entry.file(resolve, reject));
+        out.push({ file, path: entry.fullPath.replace(/^\//, "") });
+      } catch {
+      }
+    } else if (entry.isDirectory) {
+      const reader = entry.createReader();
+      try {
+        for (let batch = await readEntries(reader); batch.length; batch = await readEntries(reader)) {
+          for (const child of batch) await walk(child, out);
+        }
+      } catch {
+      }
+    }
+  }
+  function droppedFiles(dataTransfer) {
+    const items = [...dataTransfer.items ?? []].filter((item) => item.kind === "file");
+    const entries = items.map((item) => item.webkitGetAsEntry?.()).filter(Boolean);
+    if (entries.length !== items.length) {
+      const files = [...dataTransfer.files].map((file) => ({ file, path: file.name }));
+      return Promise.resolve(files);
+    }
+    return (async () => {
+      const out = [];
+      for (const entry of entries) await walk(entry, out);
+      return out;
+    })();
+  }
+  function pickedFiles(input) {
+    return [...input.files ?? []].map((file) => ({ file, path: file.webkitRelativePath || file.name }));
+  }
+  function mergeSelections(current, added) {
+    const key = ({ file, path }) => `${path}|${file.size}|${file.lastModified}`;
+    const seen = new Set(current.map(key));
+    const out = [...current];
+    for (const item of added) {
+      if (seen.has(key(item))) continue;
+      seen.add(key(item));
+      out.push(item);
+    }
+    return out;
+  }
+
+  // src/js/library.js
+  var APP_ID = /^\d{1,12}$/;
+  function byRecency(a, b) {
+    const x = a.lastActivity ?? -Infinity;
+    const y = b.lastActivity ?? -Infinity;
+    if (x !== y) return y > x ? 1 : -1;
+    return a.id < b.id ? -1 : 1;
+  }
+  function mergeNewest(byKey, key, name, at) {
+    const known = byKey.get(key);
+    if (!known) {
+      byKey.set(key, { id: key, name, lastActivity: at });
+      return;
+    }
+    const newer = at !== null && (known.lastActivity === null || at >= known.lastActivity);
+    if (newer) {
+      known.lastActivity = at;
+      if (name) known.name = name;
+    } else if (!known.name && name) {
+      known.name = name;
+    }
+  }
+  function makeLibrary(records, { sourceHint = null, hasRecency = false, fileDate = null, origin = "file", cap = APP_CAP } = {}) {
+    const byId = /* @__PURE__ */ new Map();
+    for (const record of records) {
+      const id = String(record?.id ?? "").trim();
+      if (!APP_ID.test(id)) continue;
+      mergeNewest(byId, id, cleanName(record.name), parseDate(record.lastActivity));
+    }
+    const all = [...byId.values()];
+    let newest = null;
+    for (const app of all) {
+      if (app.lastActivity !== null && (newest === null || app.lastActivity > newest)) newest = app.lastActivity;
+    }
+    const ranked = all.length > cap ? [...all].sort(byRecency) : all;
+    return {
+      apps: ranked.slice(0, cap),
+      excluded: ranked.slice(cap),
+      totalInFile: all.length,
+      fileDate: parseDate(fileDate) ?? newest,
+      hasRecency: Boolean(hasRecency),
+      sourceHint: isSupported(sourceHint) ? sourceHint : null,
+      origin
+    };
+  }
+
+  // src/js/intake.js
+  async function resolveInstalls(installs, countryCode, queue2) {
+    if (!installs.length) return [];
+    const batches = makeBatches(installs.map((i) => i.bundleId), BUNDLE_BATCH_SIZE);
+    const answers = await Promise.allSettled(
+      batches.map(
+        (batch) => queue2.add((attempt) => bundleLookupUrl(batch, countryCode, attempt), { priority: 0, meta: { country: countryCode, kind: "bundle" } })
+      )
+    );
+    const ids = /* @__PURE__ */ new Map();
+    for (const answer of answers) {
+      if (answer.status !== "fulfilled") continue;
+      for (const [bundleId, id] of parseBundleLookup(answer.value)) ids.set(bundleId, id);
+    }
+    const records = [];
+    for (const install of installs) {
+      const id = ids.get(install.bundleId.toLowerCase());
+      if (id) records.push({ id, name: install.name, lastActivity: install.lastActivity });
+    }
+    return records;
+  }
+  async function buildIntake(summary, { queue: queue2 }) {
+    const sourceHint = summary.storefront ? codeForStorefront(summary.storefront) : null;
+    if (summary.storefront && !sourceHint) return { status: "unsupported", storefront: summary.storefront };
+    const resolved = sourceHint ? await resolveInstalls(summary.installs, sourceHint, queue2) : [];
+    const apps = makeLibrary([...summary.apps, ...resolved], {
+      sourceHint,
+      // "Last 12 months" needs a record of use, not just of first download.
+      hasRecency: summary.hasUpdates || resolved.length > 0,
+      fileDate: summary.fileDate,
+      origin: "file"
+    });
+    const library = attachPurchases(apps, {
+      spending: summary.spending,
+      subscriptions: summary.subscriptions,
+      subscriptionsKnown: summary.hasSubscriptions
+    });
+    if (!library.totalInFile) return { status: "empty", files: summary.files };
+    return {
+      status: "ready",
+      library,
+      files: summary.files,
+      matchedInstalls: resolved.length,
+      found: {
+        apps: library.totalInFile,
+        paid: summary.paid,
+        subscriptions: summary.subscriptionRecords,
+        devices: summary.devices
+      }
+    };
+  }
+
+  // src/js/sample-library.js
+  var eur = (euros) => /* @__PURE__ */ new Map([["EUR", Math.round(euros * 100)]]);
+  var spent = (price, inApp = 0) => ({ price: price ? eur(price) : /* @__PURE__ */ new Map(), inApp: inApp ? eur(inApp) : /* @__PURE__ */ new Map() });
+  var charge = (at, euros) => ({ at: Date.parse(at), amount: { currency: "EUR", minor: Math.round(euros * 100) }, refunded: false });
+  var SAMPLE = {
+    sourceHint: "fr",
+    hasRecency: true,
+    spending: /* @__PURE__ */ new Map([
+      ["425073498", spent(12.99)],
+      ["904280696", spent(10.99)],
+      ["424389933", spent(349.99)],
+      ["484115113", spent(0, 2.99)]
+    ]),
+    subscriptions: [
+      {
+        product: "1100000001",
+        plan: "Molotov Extra",
+        appId: "1053134780",
+        appName: "Molotov - TV en direct, replay",
+        renewing: true,
+        startedAt: Date.parse("2021-11-02T20:00:00Z"),
+        charges: [charge("2026-08-02T20:00:00Z", 4.99), charge("2026-09-02T20:00:00Z", 4.99)]
+      },
+      {
+        product: "1100000002",
+        plan: "Super Duolingo",
+        appId: "570060128",
+        appName: "Duolingo",
+        renewing: false,
+        startedAt: Date.parse("2026-02-10T08:00:00Z"),
+        charges: [charge("2026-02-10T08:00:00Z", 83.99)]
+      },
+      {
+        product: "1100000003",
+        plan: "Windy Premium",
+        appId: "1161387262",
+        appName: "Windy.com",
+        renewing: false,
+        startedAt: Date.parse("2023-04-04T04:00:00Z"),
+        charges: [charge("2023-04-04T04:00:00Z", 19.99)]
+      }
+    ],
+    apps: [
+      { id: "310633997", name: "WhatsApp Messenger", lastActivity: "2026-09-12T07:41:09Z" },
+      { id: "389801252", name: "Instagram", lastActivity: "2026-09-10T19:02:44Z" },
+      { id: "544007664", name: "YouTube", lastActivity: "2026-09-08T06:15:31Z" },
+      { id: "324684580", name: "Spotify : Musique et podcasts", lastActivity: "2026-09-11T21:48:02Z" },
+      { id: "363590051", name: "Netflix", lastActivity: "2026-08-27T20:10:55Z" },
+      { id: "585027354", name: "Google Maps", lastActivity: "2026-09-05T12:33:18Z" },
+      { id: "570060128", name: "Duolingo : Langues et échecs", lastActivity: "2026-07-19T08:04:40Z" },
+      { id: "874139669", name: "Signal - Messagerie privée", lastActivity: "2025-04-02T17:26:12Z" },
+      { id: "1161387262", name: "Windy.com - Météo & Radar", lastActivity: "2026-09-09T05:57:01Z" },
+      { id: "333903271", name: "Twitter", lastActivity: "2023-02-14T09:30:27Z" },
+      { id: "425073498", name: "Procreate", lastActivity: "2024-11-03T15:12:09Z" },
+      { id: "904280696", name: "Things 3", lastActivity: "2026-06-21T10:41:36Z" },
+      { id: "424389933", name: "Final Cut Pro", lastActivity: "2024-03-30T13:05:52Z" },
+      { id: "505488770", name: "Impots.gouv", lastActivity: "2026-05-22T18:19:47Z" },
+      { id: "620447173", name: "Compte ameli", lastActivity: "2025-06-18T11:02:33Z" },
+      { id: "343889987", name: "SNCF Connect: Trains & trajets", lastActivity: "2026-08-02T16:44:20Z" },
+      { id: "925339063", name: "Doctolib - Compagnon de santé", lastActivity: "2026-03-15T09:11:05Z" },
+      { id: "575913704", name: "Lydia", lastActivity: "2026-01-09T13:27:58Z" },
+      { id: "407248490", name: "TF1+ : Streaming, TV en Direct", lastActivity: "2025-12-24T19:40:16Z" },
+      { id: "428835098", name: "france.tv: direct et replay TV", lastActivity: "2024-12-31T22:03:44Z" },
+      { id: "1053134780", name: "Molotov - TV en direct, replay", lastActivity: "2022-01-16T20:55:09Z" },
+      { id: "484115113", name: "leboncoin", lastActivity: "2025-11-02T10:18:29Z" },
+      { id: "409362880", name: "La Banque Postale : mon compte", lastActivity: "2025-10-07T07:52:11Z" },
+      { id: "632064380", name: "Vinted : shopping seconde main", lastActivity: "2024-04-12T14:36:50Z" },
+      { id: "370362301", name: "NS", lastActivity: "2026-09-11T06:48:35Z" },
+      { id: "621542526", name: "Buienradar - weer", lastActivity: "2026-09-12T06:02:13Z" },
+      { id: "1112935685", name: "Tikkie", lastActivity: "2026-08-18T17:21:04Z" },
+      { id: "1631365678", name: "NextEnergy", lastActivity: "2026-09-04T08:30:57Z" },
+      { id: "642848719", name: "Flappy Bird", lastActivity: "2015-10-02T18:44:21Z" },
+      { id: "592447445", name: "Vine", lastActivity: "2016-08-21T12:09:38Z" },
+      { id: "972909677", name: "Periscope", lastActivity: "2017-03-11T21:15:02Z" }
+    ]
+  };
+
+  // src/js/ui/add.js
+  function filePicker(id, label, { folder = false, quiet = false } = {}) {
+    return html`<label class="button${quiet ? " button--quiet" : ""}">${label}<input type="file" id="${id}" class="visually-hidden" multiple${folder ? trusted(" webkitdirectory") : ""}></label>`;
+  }
+  function filesList(files) {
+    return html`<ul class="files">
+    ${files.map((f) => {
+      let what = "Ignored";
+      if (f.status === "read") what = KIND_LABELS[f.kind];
+      if (f.status === "unreadable") what = "Couldn't open";
+      return html`<li class="files__item is-${f.status}">
+        <span class="files__name">${f.name}</span>
+        <span class="files__what">${what}${f.where ? html`<span class="files__where"> · in ${f.where}</span>` : ""}</span>
+      </li>`;
+    })}
+  </ul>`;
+  }
+  function problem(error) {
+    if (error.kind === "failed") {
+      return html`<div class="notice" role="alert">
+      <p class="notice__title">Something went wrong while reading your files.</p>
+      <p>Try again, or add the files one at a time.</p>
+    </div>`;
+    }
+    const readSome = error.files.some((f) => f.status === "read");
+    return html`<div class="notice" role="alert">
+    <p class="notice__title">${readSome ? "These files don't list any apps." : "We didn't find your App Store history in these files."}</p>
+    <p>Your apps are listed in two files from Apple's <em>App Store information</em> download: <em>Store Transaction Purchase and Free Apps History</em> and <em>Store Re-download and Update History</em>. Add the ZIP file or folder that contains either of them.</p>
+    ${error.files.length ? html`<details class="more"><summary>What we looked at</summary>${filesList(error.files)}</details>` : ""}
+  </div>`;
+  }
+  function addView(m) {
+    return html`
+    <section class="intro">
+      <h1 class="title" tabindex="-1">Add your file</h1>
+      <p class="lede">Add what Apple sent you: the ZIP files, or the folders they unzip into. If Apple sent several, add them all at once.</p>
+    </section>
+
+    ${m.error ? problem(m.error) : ""}
+
+    <section class="drop" aria-label="Add your file">
+      <p class="drop__title">Drop your files or folders here</p>
+      <div class="drop__actions">
+        ${filePicker("pick-files", "Choose files")}
+        ${filePicker("pick-folder", "Choose a folder", { folder: true, quiet: true })}
+      </div>
+      <p class="drop__limit">${limitLine(APP_CAP)}</p>
+    </section>
+
+    <p class="aside">No file yet? <button type="button" class="linkish" data-action="go" data-value="apple">See how to get it from Apple</button>, or <button type="button" class="linkish" data-action="sample">try Libertyscan with a sample list</button>.</p>`;
+  }
+  function readingView(m) {
+    const line = m.phase === "installs" ? "Looking up the apps in your install history with Apple…" : m.name ? `Reading ${m.name}` : "";
+    return html`
+    <section class="intro">
+      <h1 class="title" tabindex="-1">Reading your files…</h1>
+      <p class="lede" aria-live="polite">${line}</p>
+      <progress class="progress" aria-label="Reading your files"></progress>
+    </section>`;
+  }
+  function unsupportedView(m) {
+    return html`
+    <section class="intro">
+      <h1 class="title" tabindex="-1">Libertyscan doesn't cover ${m.storefront} yet</h1>
+      <p class="lede">Your file shows an Apple Account in ${m.storefront}. For now Libertyscan checks six countries: ${listNames(COUNTRIES)}.</p>
+      <p><button type="button" class="button button--quiet" data-action="restart">Start over</button></p>
+    </section>`;
+  }
+
+  // src/js/ui/apple.js
+  var APPLE_PRIVACY = "https://privacy.apple.com/";
+  var APPLE_HELP = "https://support.apple.com/en-us/102208";
+  function appleView() {
+    return html`
+    <section class="intro">
+      <h1 class="title" tabindex="-1">Get your list from Apple</h1>
+      <p class="lede">Libertyscan works from the record of your App Store downloads, which Apple sends you when you ask. Asking takes a few minutes. Apple then takes up to a week to prepare it.</p>
+    </section>
+
+    <section class="guide">
+      <h2 class="guide__title">1. Ask Apple for your data</h2>
+      <ol class="steps">
+        <li>On a Mac or PC, go to <a href="${APPLE_PRIVACY}" target="_blank" rel="noopener noreferrer">privacy.apple.com</a> and sign in with your Apple Account.</li>
+        <li>Choose <em>Request a copy of your data</em>.</li>
+        <li>Tick <em>Apple Media Services Information</em> and <em>Apple Account and device information</em>.</li>
+        <li>If you live in the European Union, the United Kingdom or Japan, also tick <em>App Store information</em> and <em>App install and push notification activity</em>. These two give Libertyscan the most to work with.</li>
+        <li>Continue, and finish the request.</li>
+      </ol>
+
+      <h2 class="guide__title">2. Wait for Apple's emails</h2>
+      <ul class="plain-list">
+        <li>Apple checks that the request is yours, prepares your data and emails you when it's ready, within a week.</li>
+        <li><em>App Store information</em> and <em>App install and push notification activity</em> are prepared separately, so they can arrive on different days.</li>
+        <li>Each download stays available for <strong>14 days</strong>. After that Apple removes it and you have to ask again.</li>
+        <li>We'll email you a reminder after a week, and once more before Apple's download would disappear.</li>
+      </ul>
+
+      <h2 class="guide__title">3. Download the files and add them here</h2>
+      <p>Download each part on a Mac or PC, then add them to Libertyscan together: the ZIP files as they come, or the folders they unzip into. Libertyscan reads four files and ignores the rest:</p>
+      <ul class="plain-list">
+        <li><em>Store Transaction Purchase and Free Apps History</em>: every app you've bought or downloaded</li>
+        <li><em>Store Re-download and Update History</em>: when you last updated or reinstalled each one</li>
+        <li><em>Subscription History</em>: your subscriptions</li>
+        <li><em>App install activity</em>: which country's App Store you use</li>
+      </ul>
+      <p class="muted">Anything else Apple sends, Libertyscan reads only far enough to recognise it, then leaves alone.</p>
+
+      <div class="notice notice--quiet">
+        <p class="notice__title">Outside the European Union, the United Kingdom and Japan</p>
+        <p>Apple offers the last two boxes only there. Elsewhere, Libertyscan can still check your whole history, but it can't narrow it to the last 12 months, and you'll choose your current country yourself.</p>
+      </div>
+
+      <p class="muted">More from Apple: <a href="${APPLE_HELP}" target="_blank" rel="noopener noreferrer">Get a copy of the data associated with your Apple Account</a>.</p>
+    </section>
+
+    <div class="actions">
+      <button type="button" class="button" data-action="go" data-value="add">I have my files</button>
+      <span class="muted">Not yet? Come back to Libertyscan when Apple's emails arrive.</span>
+    </div>`;
+  }
+
+  // src/js/ui/parts.js
+  var pressed = (on) => on ? "true" : "false";
+  function sourceSelect(selected, { detected = false } = {}) {
+    return html`<select id="source" class="select"${detected ? trusted(' aria-describedby="source-hint"') : ""}>
+    ${selected ? "" : html`<option value="" selected disabled>Choose a country</option>`}
+    ${COUNTRIES.map(
+      (c) => html`<option value="${c.code}"${c.code === selected ? trusted(" selected") : ""}>${c.name}</option>`
+    )}
+  </select>`;
+  }
+  function initial(name) {
+    const first = [...String(name).trim()][0];
+    return first ? first.toUpperCase() : "?";
+  }
+  function scopeToggle(m) {
+    const { all, recent } = m.scopes;
+    if (!m.hasRecency) {
+      return html`<div class="scope">
+      <div class="seg" role="group" aria-label="Which apps">
+        <button type="button" class="seg__btn" aria-pressed="true" disabled>All time <span class="seg__n">${count(all)}</span></button>
+        <button type="button" class="seg__btn" aria-pressed="false" disabled>Last 12 months</button>
+      </div>
+      <p class="field__hint">Last 12 months needs the update history from Apple's App Store information download, offered in the EU, the UK and Japan.</p>
+    </div>`;
+    }
+    const options = [
+      ["all", "All time", all],
+      ["12m", "Last 12 months", recent]
+    ];
+    return html`<div class="scope">
+    <div class="seg" role="group" aria-label="Which apps">
+      ${options.map(
+      ([value, label, n]) => html`<button type="button" class="seg__btn" data-action="scope" data-value="${value}" aria-pressed="${pressed(m.scope === value)}">${label} <span class="seg__n">${count(n)}</span></button>`
+    )}
+    </div>
+  </div>`;
+  }
+  function csvDownload(m) {
+    return html`<div class="download">
+    <button type="button" class="button button--quiet" data-action="csv"${m.csv.ready ? "" : trusted(' disabled aria-describedby="csv-hint"')}>Download as a spreadsheet (CSV)</button>
+    <p class="download__hint" id="csv-hint">${m.csv.ready ? "Every app in this view, with its status in each country." : csvWaitLine(m.csv.left)}</p>
+  </div>`;
+  }
+
+  // src/js/ui/compare.js
+  function figure(row3) {
+    if (row3.status === "error") {
+      return html`Couldn't check <button type="button" class="linkish" data-action="retry" data-value="${row3.code}">Try again</button>`;
+    }
+    if (row3.status === "loading") return html`<span class="is-loading">Checking…</span>`;
+    return lostLabel(row3.counts.lost);
+  }
+  function tone(row3) {
+    if (row3.status !== "done") return "";
+    return row3.counts.lost ? " is-lossy" : " is-clear";
+  }
+  function row(r, m) {
+    const selected = r.code === m.target;
+    return html`<tr class="compare__row${selected ? " is-selected" : ""}">
+    <td class="compare__rank">${r.rank ?? ""}</td>
+    <th scope="row" class="compare__country">
+      <span class="compare__name">
+        <button type="button" class="compare__pick" data-action="target" data-value="${r.code}">${r.country.name}<span class="visually-hidden">: see the list</span></button>
+        ${selected ? html`<span class="compare__yours">Your choice</span>` : ""}
+      </span>
+    </th>
+    <td class="compare__figure${tone(r)}">${figure(r)}</td>
+    ${m.anyPaid ? html`<td class="compare__paid">${r.status === "done" ? paidCell(r.money.lost) : ""}</td>` : ""}
+  </tr>`;
+  }
+  function compareView(m) {
+    return html`
+    <section class="intro">
+      <h1 class="title" tabindex="-1">Compare countries</h1>
+      <p class="lede">${compareLede(m.total, m.scope, m.source)}</p>
+    </section>
+
+    <section class="head">${scopeToggle(m)}</section>
+
+    <div class="compare-wrap">
+      <table class="compare">
+        <thead>
+          <tr>
+            <th scope="col" class="compare__rank"><span class="visually-hidden">Rank</span></th>
+            <th scope="col">Moving to</th>
+            <th scope="col">Apps you'd lose</th>
+            ${m.anyPaid ? html`<th scope="col">Paid apps among them</th>` : ""}
+          </tr>
+        </thead>
+        <tbody aria-live="polite">${m.rows.map((r) => row(r, m))}</tbody>
+      </table>
+    </div>
+    <p class="compare__note">Choose a country to see its list.${m.checkedAt ? ` Checked with Apple on ${day(m.checkedAt)}. Store listings change, so this is a snapshot.` : ""}</p>
+
+    ${csvDownload(m)}
+
+    <div class="actions"><button type="button" class="button button--quiet" data-action="go" data-value="results">Back to your results</button></div>`;
+  }
+
+  // src/js/ui/landing.js
+  function landingView() {
+    return html`
+    <section class="intro">
+      <h1 class="title" tabindex="-1">Which of your apps survive a move?</h1>
+      <p class="lede">Moving your Apple Account to another country moves you to that country's App Store. Apps it doesn't list keep working, but you can no longer update or reinstall them. Libertyscan reads the list of apps Apple keeps for you and checks each one against the App Store of the country you're moving to, so you know what you'd lose before you switch.</p>
+    </section>
+
+    <section class="panel">
+      <p><strong>What it can't tell you:</strong> whether an app works in the new country. Some apps are listed everywhere but only serve local customers, such as banks, government services, transport and TV channels. Libertyscan only sees whether the App Store lists them.</p>
+      <p class="panel__note">It covers ${listNames(COUNTRIES)}, and it's free.</p>
+    </section>
+
+    <p><button type="button" class="button" data-action="go" data-value="start">Get started</button></p>`;
+  }
+
+  // src/js/ui/notice.js
+  function pageProblem({ protocol, origin }) {
+    if (protocol === "file:") return "file";
+    if (origin === "null") return "framed";
+    return null;
+  }
+  function fileNotice(problem3 = "file") {
+    if (problem3 === "framed") {
+      return html`<section class="intro">
+      <h1 class="title">Open Libertyscan in its own tab</h1>
+      <p class="lede">Apple's App Store doesn't answer Libertyscan when it's shown inside another page. Open it in a browser tab of its own.</p>
+    </section>`;
+    }
+    return html`<section class="intro">
+    <h1 class="title">Open this page from a web address</h1>
+    <p class="lede">Apple's App Store only answers pages that have a web address, and this one was opened straight from your disk. Run <code>npm run dev</code> and open http://localhost:5173, or upload the file to any web host.</p>
+  </section>`;
+  }
+
+  // src/js/ui/pick.js
+  function activity(m) {
+    return m.first !== null ? html`<p class="panel__line">Activity from ${month(m.first)} to ${month(m.last)}</p>` : "";
+  }
+  function samplePanel(m) {
+    return html`<section class="panel">
+    <p class="panel__stat"><strong>${count(m.total)}</strong> apps in your list</p>
+    ${activity(m)}
+    <p class="panel__note">Preview: a hand-typed list of real App Store apps, with invented dates, stands in for your Apple file. <button type="button" class="linkish" data-action="restart">Use your own file</button></p>
+  </section>`;
+  }
+  function filePanel(m) {
+    const tally = { read: 0, ignored: 0, unreadable: 0 };
+    for (const f of m.files) tally[f.status] += 1;
+    const left = m.excluded.length;
+    return html`<section class="panel">
+    <p class="panel__stat">${foundLine(m.found)}</p>
+    ${activity(m)}
+    ${left ? html`<p class="panel__line panel__cap">${capLine(m.found.apps, m.total)}</p>
+        <details class="more" data-section="excluded"${m.open.excluded ? trusted(" open") : ""}>
+          <summary>Show the ${count(left)} left out</summary>
+          <ul class="plain">${m.excluded.map((app) => html`<li>${app.name || `App ${app.id}`}</li>`)}</ul>
+        </details>` : ""}
+    <details class="more" data-section="files"${m.open.files ? trusted(" open") : ""}>
+      <summary>${filesLine(tally)}</summary>
+      ${filesList(m.files)}
+    </details>
+    <div class="panel__actions">
+      ${filePicker("more-files", "Add another file", { quiet: true })}
+      <button type="button" class="linkish" data-action="restart">Start over</button>
+    </div>
+  </section>`;
+  }
+  function pickView(m) {
+    return html`
+    <section class="intro">
+      <h1 class="title" tabindex="-1">Where are you moving?</h1>
+      <p class="lede">Pick the country of your new Apple Account. Every app in your list is checked against that country's App Store, so you can see which ones you could no longer update or reinstall.</p>
+    </section>
+
+    ${m.sample ? samplePanel(m) : filePanel(m)}
+
+    <section class="pick">
+      <div class="field">
+        <label class="field__label" for="source">Moving from</label>
+        ${sourceSelect(m.source, { detected: m.detected })}
+        ${m.detected ? html`<p class="field__hint" id="source-hint">Found in your file</p>` : ""}
+      </div>
+      <fieldset class="field">
+        <legend class="field__label">Moving to</legend>
+        <div class="choices">
+          ${m.targets.map(
+      (c) => html`<button type="button" class="choice" data-action="target" data-value="${c.code}"${m.source ? "" : trusted(" disabled")}>${c.name}</button>`
+    )}
+        </div>
+      </fieldset>
+    </section>`;
+  }
+
+  // src/js/ui/privacy.js
+  function contact(email) {
+    return email ? html`<a href="mailto:${email}">${email}</a>` : html`<span class="muted">(contact address to be added)</span>`;
+  }
+  function privacyView(m) {
+    return html`
+    <section class="intro">
+      <h1 class="title" tabindex="-1">Privacy and terms</h1>
+      <p class="lede">Your Apple file stays on your device, and your email address is only used for two reminders.</p>
+    </section>
+
+    <section class="guide">
+      <h2 class="guide__title">Your Apple file</h2>
+      <p>Libertyscan reads it in your browser. It is never uploaded.</p>
+      <p>To check each App Store, your browser sends the App Store number of each of your apps to Apple's public App Store search. Nothing else from your file is sent: no names, purchases, subscriptions or devices.</p>
+
+      <h2 class="guide__title">Your email address</h2>
+      <p>It's stored in Libertyscan's Google account and used only to send you two reminders, 7 and 12 days after you sign up. Each one has a link to stop them. Your address is never shared or sold, and it's deleted whenever you ask: write to ${contact(m.email)}.</p>
+
+      <h2 class="guide__title">Nothing else</h2>
+      <p>No cookies, no analytics, no ads. Your browser only remembers that you've signed up, so the email step isn't shown again.</p>
+      <p>The site is hosted on GitHub Pages. Like any web host, GitHub records visitors' IP addresses for security, and Apple and Google see your IP address when your browser contacts them.</p>
+
+      <h2 class="guide__title">Terms</h2>
+      <p>Libertyscan is free, provided as is, and not affiliated with Apple. App Store is a trademark of Apple Inc.</p>
+      <p>Results are a snapshot of what Apple's App Stores listed on the day you checked. Listings change, and Libertyscan can't tell whether an app works in another country. Use them as a guide, and check anything important before you switch.</p>
+
+      <p class="muted">Questions: ${contact(m.email)}. Last updated 29 September 2026.</p>
+    </section>`;
+  }
+
+  // src/js/ui/results.js
+  function resultsView(m) {
+    return html`
+    <section class="head">
+      <h1 class="title" tabindex="-1">Your results</h1>
+      <div class="route">
+        <div class="field field--from">
+          <label class="field__label" for="source">Moving from</label>
+          ${sourceSelect(m.source.code, { detected: m.detected })}
+          ${m.detected ? html`<p class="field__hint" id="source-hint">Found in your file</p>` : ""}
+        </div>
+        <div class="field field--to">
+          <span class="field__label" id="to-label">Moving to</span>
+          <div class="destinations" role="group" aria-labelledby="to-label">${m.targets.map(destination)}</div>
+        </div>
+      </div>
+      ${scopeToggle(m)}
+    </section>
+
+    <section class="verdict-area" aria-live="polite">${verdictArea(m)}</section>
+
+    ${m.results ? html`<div class="nexts">
+          <button type="button" class="next" data-action="go" data-value="switch">
+            <span class="next__title">Before you switch</span>
+            <span class="next__sub">What Apple asks you to do first, with your subscriptions and the apps to redownload</span>
+          </button>
+          <button type="button" class="next" data-action="go" data-value="compare">
+            <span class="next__title">Compare every country</span>
+            <span class="next__sub">All five destinations side by side, ranked by how many of your apps you'd lose</span>
+          </button>
+        </div>
+        ${explainer()}
+        <section class="browse" aria-label="Your apps">
+          ${toolbar(m)}
+          <div id="lists">${listsView(m)}</div>
+          ${csvDownload(m)}
+        </section>` : ""}`;
+  }
+  function destination(t) {
+    let figure2 = "Checking…";
+    if (t.status === "done") figure2 = lostLabel(t.lost);
+    if (t.status === "error") figure2 = "Couldn't check";
+    const tone2 = t.status === "done" ? t.lost ? " is-lossy" : " is-clear" : "";
+    return html`<button type="button" class="dest${t.selected ? " is-selected" : ""}${tone2}" data-action="target" data-value="${t.country.code}" aria-pressed="${pressed(t.selected)}">
+    <span class="dest__name">${t.country.name}</span>
+    <span class="dest__figure${t.status === "loading" ? " is-loading" : ""}">${figure2}</span>
+  </button>`;
+  }
+  function verdictArea(m) {
+    if (m.failed.length) {
+      return html`<div class="verdict verdict--error">
+      <p class="verdict__headline">We couldn't finish checking.</p>
+      <p class="verdict__line">Apple's App Store in ${listNames(m.failed)} didn't answer, even after several tries. Nothing has been counted as lost.</p>
+      <button type="button" class="button" data-action="retry">Try again</button>
+    </div>`;
+    }
+    if (!m.results) {
+      return html`<div class="verdict verdict--loading">
+      <p class="verdict__headline">${checkingLine(m.total, m.source, m.target)}</p>
+      <progress class="progress" max="${Math.max(1, m.progress.total)}" value="${m.progress.done}"></progress>
+    </div>`;
+    }
+    const v = verdict(m.results.counts, m.source, m.target);
+    const split = v.text.match(/^([\d,]+)( .*)$/);
+    const extra = delistedLine(m.results.counts.delisted, m.source, m.target);
+    return html`<div class="verdict verdict--${v.tone}">
+    <p class="verdict__headline">${split ? html`<strong class="verdict__figure">${split[1]}</strong>${split[2]}` : v.text}</p>
+    ${extra ? html`<p class="verdict__line"><button type="button" class="linkish" data-action="show-delisted">${extra}</button></p>` : ""}
+    ${m.subscriptions ? subscriptionsPart(m.subscriptions, m.open.subscriptions) : ""}
+    ${m.results.money.anyPaid ? html`<p class="verdict__line">${paidLine(m.results.money, m.source, m.target)}</p>` : ""}
+    <p class="verdict__stamp">Checked with Apple on ${day(m.checkedAt)}. Store listings change, so this is a snapshot.</p>
+  </div>`;
+  }
+  function subscriptionsPart(plans, open) {
+    const tally = { renewing: 0, maybe: 0 };
+    for (const plan of plans) tally[plan.state] += 1;
+    const line = subscriptionsLine(tally);
+    if (!plans.length) return html`<p class="verdict__line">${line}</p>`;
+    return html`<details class="verdict__more" data-section="subscriptions"${open ? trusted(" open") : ""}>
+    <summary class="verdict__line">${line}</summary>
+    <ul class="plans">
+      ${plans.map(
+      (p) => html`<li class="plans__item">
+          <span class="plans__name">${p.plan || "Subscription"}${p.appName && p.appName !== p.plan ? html`<span class="plans__app"> · ${p.appName}</span>` : ""}</span>
+          ${badge(p.state)}
+        </li>`
+    )}
+    </ul>
+  </details>`;
+  }
+  function badge(state2) {
+    return state2 ? html`<span class="tag tag--${state2}">${BADGES[state2]}</span>` : "";
+  }
+  function explainer() {
+    return html`<details class="explain">
+    <summary class="explain__summary">What “won't survive” means</summary>
+    <div class="explain__body">
+      <p><strong>Lost</strong> doesn't mean the app stops working. The installed app keeps running. You lose the ability to update or reinstall it under the new account.</p>
+      <p>You can spot a Lost app after the move: its store page won't open, and the App Store says “Cannot connect” when you try to update or reinstall it.</p>
+      <p><strong>Survive</strong> means the app can still be downloaded and updated from the new country's store. It doesn't promise the app works there: some services only serve local customers, and this check can't see that.</p>
+    </div>
+  </details>`;
+  }
+  function toolbar(m) {
+    const { platforms, categories } = m.view;
+    const f = m.filters;
+    const tabs = [
+      ["all", "All", platforms.all],
+      ["ios", PLATFORM_LABELS.ios, platforms.ios],
+      ["mac", PLATFORM_LABELS.mac, platforms.mac]
+    ].filter(([value, , n]) => value === "all" || n > 0);
+    return html`<div class="toolbar">
+    <div class="seg seg--small" role="group" aria-label="Platform">
+      ${tabs.map(
+      ([value, label, n]) => html`<button type="button" class="seg__btn" data-action="platform" data-value="${value}" aria-pressed="${pressed(f.platform === value)}">${label} <span class="seg__n">${count(n)}</span></button>`
+    )}
+    </div>
+    <div class="toolbar__row">
+      <label class="search">
+        <span class="visually-hidden">Search your apps</span>
+        <input id="search" class="search__input" type="search" placeholder="Search your apps" autocomplete="off" spellcheck="false" value="${f.query}">
+      </label>
+      <label class="visually-hidden" for="category">Category</label>
+      <select id="category" class="select select--small">
+        <option value="">All categories</option>
+        ${categories.map(
+      ([name, n]) => html`<option value="${name}"${f.category === name ? trusted(" selected") : ""}>${name} (${count(n)})</option>`
+    )}
+      </select>
+      <div class="seg seg--small" role="group" aria-label="Sort">
+        <button type="button" class="seg__btn" data-action="sort" data-value="name" aria-pressed="${pressed(f.sort === "name")}">A–Z</button>
+        <button type="button" class="seg__btn" data-action="sort" data-value="recent" aria-pressed="${pressed(f.sort === "recent")}">Recent</button>
+      </div>
+    </div>
+  </div>`;
+  }
+  function shown(list, total, filtering2) {
+    return filtering2 && list.length !== total ? html`${count(list.length)} <span class="group__of">of ${count(total)}</span>` : count(total);
+  }
+  function listsView(m) {
+    const { sections, filtering: filtering2 } = m.view;
+    const { counts } = m.results;
+    const { source, target, open } = m;
+    return html`
+    ${counts.lost ? html`<section class="group group--lost" aria-labelledby="h-lost">
+          <h2 class="group__title" id="h-lost">Lost <span class="group__n">${shown(sections.lost, counts.lost, filtering2)}</span></h2>
+          <p class="group__sub">They keep working, but you couldn't update or reinstall them under a ${target.adjective} account.</p>
+          ${rows(sections.lost, m)}
+        </section>` : ""}
+    ${counts.available ? html`<details class="group group--available" data-section="available"${open.available ? trusted(" open") : ""}>
+          <summary class="group__summary">
+            <h2 class="group__title">Available <span class="group__n">${shown(sections.available, counts.available, filtering2)}</span></h2>
+            <span class="group__sub">Still in the App Store in ${target.phrase}, so you can keep updating and reinstalling them.</span>
+          </summary>
+          ${rows(sections.available, m)}
+        </details>` : ""}
+    ${counts.delisted ? html`<details class="group group--delisted" id="section-delisted" data-section="delisted"${open.delisted ? trusted(" open") : ""}>
+          <summary class="group__summary">
+            <h2 class="group__title">Delisted from both App Stores <span class="group__n">${shown(sections.delisted, counts.delisted, filtering2)}</span></h2>
+            <span class="group__sub">Not in the App Store in ${source.phrase} or ${target.phrase}. The move changes nothing for these.</span>
+          </summary>
+          ${rows(sections.delisted, m)}
+        </details>` : ""}`;
+  }
+  function rows(list, m) {
+    if (!list.length) {
+      return html`<p class="empty">${m.view.searching ? "No apps in this group match your search." : "No apps in this group match these filters."}</p>`;
+    }
+    return html`<ul class="apps">${list.map(row2)}</ul>`;
+  }
+  function row2(r) {
+    const meta = [r.genre, PLATFORM_LABELS[r.platform]].filter(Boolean).join(" · ");
+    const when = r.lastActivity !== null ? `Last used ${month(r.lastActivity)}` : "";
+    const paid = r.spent ? paidLabel(r.spent) : "";
+    const link = r.storeUrl ? html`<a class="app__link" href="${r.storeUrl}" target="_blank" rel="noopener noreferrer">Store page<span class="visually-hidden"> for ${r.name}, opens in a new tab</span></a>` : "";
+    return html`<li class="app">
+    ${r.icon ? html`<img class="app__icon${r.platform === "mac" ? " app__icon--mac" : ""}" src="${r.icon}" alt="" width="40" height="40" loading="lazy" decoding="async" referrerpolicy="no-referrer">` : html`<span class="app__icon app__icon--none" aria-hidden="true">${initial(r.name)}</span>`}
+    <div class="app__main">
+      <span class="app__name">${r.name}${badge(r.badge)}</span>
+      ${r.storeName ? html`<span class="app__alt">In the App Store as “${r.storeName}”</span>` : ""}
+      ${r.stillListedIn.length ? html`<span class="app__alt">Still on the App Store in ${listNames(r.stillListedIn.map(getCountry))}</span>` : ""}
+    </div>
+    <div class="app__meta">
+      ${meta ? html`<span>${meta}</span>` : ""}
+      ${paid ? html`<span>${paid}</span>` : ""}
+      ${when || link ? html`<span>${when}${when && link ? " · " : ""}${link}</span>` : ""}
+    </div>
+  </li>`;
+  }
+
+  // src/js/ui/start.js
+  function startView(m) {
+    const describedBy = m.error ? "email-error" : "email-hint";
+    return html`
+    <section class="intro">
+      <h1 class="title" tabindex="-1">Get started</h1>
+      <p class="lede">Libertyscan is free. All it needs is your email address.</p>
+    </section>
+
+    <form class="signup" id="signup" novalidate>
+      <label class="field__label" for="email">Your email address</label>
+      <div class="signup__row">
+        <input id="email" class="input" type="email" name="email" autocomplete="email" inputmode="email" spellcheck="false" required value="${m.email}" aria-describedby="${describedBy}"${m.error ? trusted(' aria-invalid="true"') : ""}>
+        <button class="button" type="submit">Continue</button>
+      </div>
+      ${m.error ? html`<p class="field__error" id="email-error" role="alert">${m.error}</p>` : html`<p class="field__hint" id="email-hint">Apple can take up to a week to prepare your file. We'll only use your address to send you two reminders to come back. <button type="button" class="linkish" data-action="go" data-value="privacy">Privacy</button></p>`}
+      <div class="visually-hidden" aria-hidden="true">
+        <label>Leave this box unticked <input type="checkbox" name="botcheck" tabindex="-1" autocomplete="off"></label>
+      </div>
+      ${m.preview ? html`<p class="panel__note">Preview: addresses aren't sent anywhere yet.</p>` : ""}
+    </form>`;
+  }
+
+  // src/js/ui/switch.js
+  var APPLE_PAGE = "https://support.apple.com/en-us/118283";
+  function plansLine(plans) {
+    return html`<ul class="plain-list plain-list--tight ticks">
+    ${plans.map((p) => html`<li>${p.plan || "Subscription"}${p.appName && p.appName !== p.plan ? html` <span class="muted">· ${p.appName}</span>` : ""} <span class="tag tag--${p.state}">${BADGES[p.state]}</span></li>`)}
+  </ul>`;
+  }
+  function subscriptionsNote(m) {
+    if (!m?.plans) return "";
+    if (!m.plans.length) return html`<p class="yours">From your file: no subscriptions to cancel.</p>`;
+    return html`<div class="yours"><p>From your file:</p>${plansLine(m.plans)}</div>`;
+  }
+  function redownloadNote(m) {
+    if (!m) return "";
+    if (!m.lost) {
+      return html`<p class="yours">From your results: none of your apps would be lost moving to ${m.target.phrase}, but it's still Apple's advice.</p>`;
+    }
+    const one = m.lost === 1;
+    return html`<div class="yours">
+    <p class="screen-only">From your results: this matters most for the ${count(m.lost)} ${one ? "app" : "apps"} you'd lose moving to ${m.target.phrase}. Once you've switched, you can't download ${one ? "it" : "them"} again. <button type="button" class="linkish" data-action="go" data-value="results">See ${one ? "it" : "them"}</button></p>
+    <div class="print-only">
+      <p>${redownloadTitle(m.lost, m.target)}</p>
+      <ul class="ticks ticks--apps">
+        ${m.lostApps.map((a) => html`<li>${a.name}${a.platform === "mac" ? html` <span class="muted">(Mac)</span>` : ""}</li>`)}
+      </ul>
+    </div>
+  </div>`;
+  }
+  function switchView(m) {
+    return html`
+    <section class="intro">
+      <p class="print-only print-head">Libertyscan · ${m ? printRoute(m.source, m.target, m.scope) : "Before you switch"}${m?.checkedAt ? ` · checked with Apple on ${day(m.checkedAt)}` : ""}</p>
+      <h1 class="title" tabindex="-1">Before you switch</h1>
+      <p class="lede">Apple lists what to do before changing your Apple Account's country. Some of it can block the change; the rest protects what you have.</p>
+    </section>
+
+    <ol class="checklist">
+      <li class="checklist__item">
+        <p class="checklist__title">Spend your Apple Account balance</p>
+        <p>Use up any remaining balance first. If it's less than the cost of a single item, only Apple Support can clear it.</p>
+      </li>
+      <li class="checklist__item">
+        <p class="checklist__title">Cancel subscriptions that block the change, then wait until the end of the subscription period</p>
+        <p>Cancelling isn't enough: the change is possible once the period you paid for has ended.</p>
+        ${subscriptionsNote(m)}
+      </li>
+      <li class="checklist__item">
+        <p class="checklist__title">Wait for pending purchases to clear</p>
+        <p>Memberships, pre-orders, movie rentals, Season Passes and store-credit refunds all need to complete first. A pre-order can be cancelled.</p>
+      </li>
+      <li class="checklist__item">
+        <p class="checklist__title">Have a payment method for the new country</p>
+        <p>You may need a valid payment method and billing address there. If you'd rather not, wait until you're in the new country and create a new Apple Account.</p>
+      </li>
+      <li class="checklist__item">
+        <p class="checklist__title">Redownload everything you want to keep, on every device</p>
+        <p>Apps, music, films, TV shows and books, on every device you'll use them on. Some may not be available in the new country.</p>
+        ${redownloadNote(m)}
+      </li>
+      <li class="checklist__item">
+        <p class="checklist__title">Leave any Family Sharing group</p>
+        <p>Being part of one can stop you from changing country.</p>
+      </li>
+    </ol>
+
+    <p class="muted">From Apple's page <a class="source-link" href="${APPLE_PAGE}" target="_blank" rel="noopener noreferrer">Change your Apple Account country or region</a>, published 14 September 2026.</p>
+    <div class="actions">
+      <button type="button" class="button" data-action="print">Print this checklist</button>
+      ${m ? html`<button type="button" class="button button--quiet" data-action="go" data-value="results">Back to your results</button>` : ""}
+    </div>
+    ${m?.lost ? html`<p class="aside screen-only">The printed checklist names ${m.lost === 1 ? "the app" : `all ${count(m.lost)} apps`} to redownload, with a box to tick for each.</p>` : ""}`;
+  }
+
+  // src/js/app.js
+  var main = document.getElementById("main");
+  var storage = browserStorage();
+  var firstScreen = () => hasSignedUp(storage) ? "add" : "landing";
+  var state = {
+    screen: firstScreen(),
+    signup: { email: "", error: "" },
+    selection: [],
+    // the files handed over so far: [{ file, path }]
+    reading: { name: "", phase: "files" },
+    error: null,
+    unsupported: null,
+    library: null,
+    intake: null,
+    // what the confirmation shows: { found, files }
+    source: null,
+    target: null,
+    scope: "all",
+    filters: { platform: "all", category: "", query: "", sort: "name" },
+    open: { available: null, delisted: false, files: false, excluded: false, subscriptions: false }
+    // null: follow the default
+  };
+  var queue = createQueue({ fetchJson });
+  var availability = null;
+  var run = 0;
+  var focused = () => [state.source, state.target].filter(Boolean);
+  function pickModel() {
+    const { library } = state;
+    const dates = library.apps.map((a) => a.lastActivity).filter((d) => d !== null);
+    return {
+      total: library.apps.length,
+      first: dates.length ? Math.min(...dates) : null,
+      last: dates.length ? Math.max(...dates) : null,
+      sample: library.origin === "sample",
+      found: state.intake?.found ?? null,
+      files: state.intake?.files ?? [],
+      excluded: library.excluded,
+      open: state.open,
+      source: state.source,
+      detected: Boolean(library.sourceHint) && state.source === library.sourceHint,
+      targets: COUNTRY_CODES.filter((c) => c !== state.source).map(getCountry)
+    };
+  }
+  function resultsModel() {
+    const { library } = state;
+    const src = availability.get(state.source);
+    const tgt = availability.get(state.target);
+    const apps = appsInScope(library, state.scope);
+    const compared = new Map(compare({ library, availability, source: state.source, scope: state.scope }).map((r) => [r.code, r]));
+    const targets = COUNTRY_CODES.filter((c) => c !== state.source).map((code) => ({
+      country: getCountry(code),
+      status: compared.get(code).status,
+      selected: code === state.target,
+      lost: compared.get(code).counts?.lost ?? null
+    }));
+    const ready = src.status === "done" && tgt.status === "done";
+    const results = ready ? derive({ library, availability, source: state.source, target: state.target, scope: state.scope }) : null;
+    let view2 = null;
+    if (results) {
+      view2 = browse(results, state.filters);
+      const lostPlatform = state.filters.platform !== "all" && !view2.platforms[state.filters.platform];
+      const lostCategory = state.filters.category && !view2.categories.some(([name]) => name === state.filters.category);
+      if (lostPlatform) state.filters.platform = "all";
+      if (lostCategory) state.filters.category = "";
+      if (lostPlatform || lostCategory) view2 = browse(results, state.filters);
+    }
+    return {
+      source: getCountry(state.source),
+      target: getCountry(state.target),
+      detected: Boolean(library.sourceHint) && state.source === library.sourceHint,
+      scope: state.scope,
+      scopes: scopeCounts(library),
+      hasRecency: library.hasRecency,
+      // Account-wide: a renewing plan blocks the switch whatever the destination or scope.
+      subscriptions: library.subscriptionsKnown ? subscriptionsToMind(library.subscriptions) : null,
+      targets,
+      failed: [src, tgt].filter((s) => s.status === "error").map((s) => getCountry(s.code)),
+      total: apps.length,
+      progress: availability.progress(focused()),
+      checkedAt: tgt.checkedAt,
+      results,
+      view: view2,
+      filters: state.filters,
+      open: openSections(results, view2),
+      csv: csvModel()
+    };
+  }
+  function csvModel() {
+    const left = COUNTRY_CODES.filter((code) => !["done", "error"].includes(availability.get(code).status)).length;
+    return { ready: left === 0, left };
+  }
+  function compareModel() {
+    const { library } = state;
+    const rows2 = compare({ library, availability, source: state.source, scope: state.scope });
+    const checked = COUNTRY_CODES.map((code) => availability.get(code).checkedAt).filter((at) => at !== null);
+    return {
+      source: getCountry(state.source),
+      target: state.target,
+      scope: state.scope,
+      scopes: scopeCounts(library),
+      hasRecency: library.hasRecency,
+      total: appsInScope(library, state.scope).length,
+      anyPaid: (library.spending?.size ?? 0) > 0,
+      checkedAt: checked.length ? Math.max(...checked) : null,
+      rows: rows2.map((r) => ({ ...r, country: getCountry(r.code) })),
+      csv: csvModel()
+    };
+  }
+  function switchModel() {
+    const { library } = state;
+    if (!library || !state.target || !availability) return null;
+    const ready = [state.source, state.target].every((code) => availability.get(code).status === "done");
+    if (!ready) return null;
+    const results = derive({ library, availability, source: state.source, target: state.target, scope: state.scope });
+    const lostApps = browse(results, { platform: "all", category: "", query: "", sort: "name" }).sections.lost;
+    return {
+      source: getCountry(state.source),
+      target: getCountry(state.target),
+      scope: state.scope,
+      checkedAt: availability.get(state.target).checkedAt,
+      lost: results.counts.lost,
+      lostApps: lostApps.map((r) => ({ name: r.name, platform: r.platform })),
+      plans: library.subscriptionsKnown ? subscriptionsToMind(library.subscriptions) : null
+    };
+  }
+  function openSections(results, view2) {
+    const subscriptions = state.open.subscriptions;
+    if (!results) return { available: false, delisted: false, subscriptions };
+    if (view2.filtering) {
+      return { available: view2.sections.available.length > 0, delisted: view2.sections.delisted.length > 0, subscriptions };
+    }
+    return {
+      available: state.open.available ?? results.counts.lost === 0,
+      delisted: state.open.delisted,
+      subscriptions
+    };
+  }
+  var frame = 0;
+  var shownScreen = null;
+  function scheduleRender() {
+    if (!frame) {
+      frame = requestAnimationFrame(() => {
+        frame = 0;
+        render2();
+      });
+    }
+  }
+  function view() {
+    if (state.screen === "results") return resultsView(resultsModel());
+    if (state.screen === "switch") return switchView(switchModel());
+    if (state.screen === "compare") return compareView(compareModel());
+    if (state.screen === "landing") return landingView();
+    if (state.screen === "privacy") return privacyView({ email: CONTACT.email });
+    if (state.screen === "apple") return appleView();
+    if (state.screen === "pick") return pickView(pickModel());
+    if (state.screen === "reading") return readingView(state.reading);
+    if (state.screen === "unsupported") return unsupportedView(state.unsupported);
+    if (state.screen === "start") return startView({ ...state.signup, preview: !SIGNUP.endpoint });
+    return addView({ error: state.error });
+  }
+  function render2() {
+    const screenChanged = shownScreen !== state.screen;
+    const keep = screenChanged ? null : rememberFocus();
+    main.innerHTML = String(view());
+    if (screenChanged && shownScreen !== null) {
+      main.querySelector("h1")?.focus({ preventScroll: true });
+      window.scrollTo(0, 0);
+    }
+    shownScreen = state.screen;
+    restoreFocus(keep);
+  }
+  function renderLists() {
+    const lists = document.getElementById("lists");
+    const model = state.screen === "results" ? resultsModel() : null;
+    if (!lists || !model?.results) {
+      render2();
+      return;
+    }
+    lists.innerHTML = String(listsView(model));
+  }
+  function rememberFocus() {
+    const el = document.activeElement;
+    if (!el || el === document.body || !main.contains(el)) return null;
+    return {
+      id: el.id,
+      action: el.dataset?.action,
+      value: el.dataset?.value,
+      start: el.selectionStart,
+      end: el.selectionEnd
+    };
+  }
+  function restoreFocus(kept) {
+    if (!kept) return;
+    let el = null;
+    if (kept.id) el = document.getElementById(kept.id);
+    else if (kept.action) {
+      const value = kept.value === void 0 ? "" : `[data-value="${CSS.escape(kept.value)}"]`;
+      el = main.querySelector(`[data-action="${CSS.escape(kept.action)}"]${value}`);
+    }
+    if (!el) return;
+    el.focus({ preventScroll: true });
+    if (typeof kept.start === "number" && typeof el.setSelectionRange === "function") {
+      try {
+        el.setSelectionRange(kept.start, kept.end);
+      } catch {
+      }
+    }
+  }
+  function reachable(screen) {
+    if (screen === "pick") return Boolean(state.library);
+    if (screen === "results" || screen === "compare") return Boolean(state.library && state.target);
+    if (screen === "unsupported") return Boolean(state.unsupported);
+    return ["landing", "start", "apple", "add", "switch", "privacy"].includes(screen);
+  }
+  function go(screen, { replace = false } = {}) {
+    state.screen = screen;
+    try {
+      window.history[replace ? "replaceState" : "pushState"]({ screen }, "");
+    } catch {
+    }
+    render2();
+  }
+  window.addEventListener("popstate", (event) => {
+    const wanted = event.state?.screen;
+    if (reachable(wanted)) state.screen = wanted;
+    else state.screen = state.library ? "pick" : firstScreen();
+    render2();
+  });
+  main.addEventListener("submit", (event) => {
+    if (event.target.id !== "signup") return;
+    event.preventDefault();
+    const form = event.target;
+    const email = form.elements.email.value.trim();
+    if (!isEmail(email)) {
+      state.signup = { email, error: email ? "That doesn't look like an email address. Check it and try again." : "Enter your email address to continue." };
+      render2();
+      const field = document.getElementById("email");
+      field?.focus();
+      if (field) {
+        field.value = "";
+        field.value = email;
+      }
+      return;
+    }
+    const bot = form.elements.botcheck.checked;
+    state.signup = { email: "", error: "" };
+    go("apple");
+    if (!bot) sendAddress(email).then((sent) => sent && rememberSignUp(storage));
+  });
+  function useLibrary(library, intake = null) {
+    availability?.dispose();
+    state.library = library;
+    state.intake = intake;
+    state.source = library.sourceHint;
+    state.target = null;
+    state.scope = "all";
+    state.filters = { platform: "all", category: "", query: "", sort: "name" };
+    state.open = { available: null, delisted: false, files: false, excluded: false, subscriptions: false };
+    go("pick", { replace: state.screen === "reading" });
+    const onChange = () => {
+      if (state.screen === "results" || state.screen === "compare") scheduleRender();
+    };
+    availability = createAvailability({ ids: library.apps.map((a) => a.id), queue, onChange });
+    for (const code of /* @__PURE__ */ new Set([...focused(), ...COUNTRY_CODES])) {
+      availability.load(code, focused().includes(code) ? 0 : 1);
+    }
+    render2();
+  }
+  function useSample() {
+    run += 1;
+    state.selection = [];
+    const library = makeLibrary(SAMPLE.apps, { sourceHint: SAMPLE.sourceHint, hasRecency: SAMPLE.hasRecency, origin: "sample" });
+    useLibrary(attachPurchases(library, { spending: SAMPLE.spending, subscriptions: SAMPLE.subscriptions, subscriptionsKnown: true }));
+  }
+  function restart() {
+    run += 1;
+    availability?.dispose();
+    availability = null;
+    Object.assign(state, { selection: [], error: null, unsupported: null, library: null, intake: null, source: null, target: null });
+    go("add");
+  }
+  async function addFiles(added) {
+    if (!added.length) return;
+    const mine = ++run;
+    const stale = () => mine !== run;
+    availability?.dispose();
+    availability = null;
+    state.selection = mergeSelections(state.selection, added);
+    state.error = null;
+    state.reading = { name: "", phase: "files" };
+    go("reading");
+    let outcome;
+    try {
+      const summary = await readInWorker(state.selection, ({ name }) => {
+        if (stale()) return;
+        state.reading = { name, phase: "files" };
+        scheduleRender();
+      });
+      if (stale()) return;
+      if (summary.installs.length) {
+        state.reading = { name: "", phase: "installs" };
+        scheduleRender();
+      }
+      outcome = await buildIntake(summary, { queue });
+    } catch {
+      outcome = { status: "failed" };
+    }
+    if (stale()) return;
+    if (outcome.status === "ready") {
+      useLibrary(outcome.library, { found: outcome.found, files: outcome.files });
+      return;
+    }
+    state.library = null;
+    if (outcome.status === "unsupported") {
+      state.unsupported = { storefront: outcome.storefront };
+      go("unsupported", { replace: true });
+    } else {
+      state.selection = [];
+      state.error = outcome.status === "failed" ? { kind: "failed", files: [] } : { kind: "empty", files: outcome.files };
+      go("add", { replace: true });
+    }
+  }
+  function downloadCsv() {
+    const { name, text } = libraryCsv({ library: state.library, availability, source: state.source, scope: state.scope });
+    const url = URL.createObjectURL(new Blob([text], { type: "text/csv;charset=utf-8" }));
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = name;
+    link.hidden = true;
+    document.body.append(link);
+    link.click();
+    link.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 6e4);
+  }
+  function setTarget(code) {
+    if (!code || code === state.source) return;
+    state.target = code;
+    availability.focus(focused());
+    if (state.screen === "results") scheduleRender();
+    else go("results");
+  }
+  function setSource(code) {
+    if (!code || code === state.source) return;
+    if (code === state.target) state.target = state.source;
+    state.source = code;
+    if (!state.target) state.screen = "pick";
+    availability.focus(focused());
+    scheduleRender();
+  }
+  var reducedMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  main.addEventListener("click", (event) => {
+    const el = event.target.closest("[data-action]");
+    if (!el || !main.contains(el) || el.disabled) return;
+    const { action, value } = el.dataset;
+    if (action === "target") setTarget(value);
+    else if (action === "go" && reachable(value)) go(value);
+    else if (action === "sample") useSample();
+    else if (action === "restart") restart();
+    else if (action === "scope") {
+      state.scope = value;
+      scheduleRender();
+    } else if (action === "platform") {
+      state.filters.platform = value;
+      scheduleRender();
+    } else if (action === "sort") {
+      state.filters.sort = value;
+      scheduleRender();
+    } else if (action === "retry") {
+      for (const code of value ? [state.source, value] : focused()) availability.retry(code, 0);
+    } else if (action === "csv") {
+      downloadCsv();
+    } else if (action === "print") {
+      window.print();
+    } else if (action === "show-delisted") {
+      state.open.delisted = true;
+      render2();
+      document.getElementById("section-delisted")?.scrollIntoView({ behavior: reducedMotion() ? "auto" : "smooth", block: "start" });
+    }
+  });
+  document.getElementById("footer")?.addEventListener("click", (event) => {
+    if (event.target.closest('[data-value="privacy"]')) go("privacy");
+  });
+  main.addEventListener("change", (event) => {
+    if (event.target.type === "file") addFiles(pickedFiles(event.target));
+    else if (event.target.id === "source") setSource(event.target.value);
+    else if (event.target.id === "category") {
+      state.filters.category = event.target.value;
+      scheduleRender();
+    }
+  });
+  var searchTimer = 0;
+  main.addEventListener("input", (event) => {
+    if (event.target.id !== "search") return;
+    state.filters.query = event.target.value;
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(renderLists, 120);
+  });
+  var filtering = () => Boolean(state.filters.query.trim() || state.filters.category || state.filters.platform !== "all");
+  main.addEventListener(
+    "toggle",
+    (event) => {
+      const section = event.target.dataset?.section;
+      const followsFilters = section === "available" || section === "delisted";
+      if (!section || followsFilters && filtering()) return;
+      state.open[section] = event.target.open;
+    },
+    true
+  );
+  var acceptsDrop = () => state.screen === "add" || state.screen === "pick";
+  var carriesFiles = (event) => [...event.dataTransfer?.types ?? []].includes("Files");
+  var dragDepth = 0;
+  function setDragging(on) {
+    document.body.classList.toggle("is-dragging", on && acceptsDrop());
+  }
+  document.addEventListener("dragenter", (event) => {
+    if (!carriesFiles(event)) return;
+    dragDepth += 1;
+    setDragging(true);
+  });
+  document.addEventListener("dragleave", (event) => {
+    if (!carriesFiles(event)) return;
+    dragDepth = Math.max(0, dragDepth - 1);
+    if (!dragDepth) setDragging(false);
+  });
+  document.addEventListener("dragover", (event) => {
+    if (!carriesFiles(event)) return;
+    event.preventDefault();
+    event.dataTransfer.dropEffect = acceptsDrop() ? "copy" : "none";
+  });
+  document.addEventListener("drop", (event) => {
+    if (!carriesFiles(event)) return;
+    event.preventDefault();
+    dragDepth = 0;
+    setDragging(false);
+    if (acceptsDrop()) droppedFiles(event.dataTransfer).then(addFiles);
+  });
+  var problem2 = pageProblem({ protocol: window.location.protocol, origin: window.origin });
+  if (problem2) {
+    main.innerHTML = String(fileNotice(problem2));
+  } else {
+    go(state.screen, { replace: true });
+  }
+})();
+</script>
+</body>
+</html>
