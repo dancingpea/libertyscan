@@ -2,13 +2,13 @@
 
 **Moving from Europe to the US? Find out which of your apps make the trip.**
 
-Europe's tech rules come at a price you can see on your own iPhone. Citing the EU's Digital Markets Act, Apple holds back features from people in the EU:
+Europe's tech rules come at a price you can see on your own iPhone. The EU's Digital Markets Act keeps Apple from shipping these to Europeans:
 
 - **The new Siri** and its AI features on iPhone and iPad: its own app, expanded Visual Intelligence, writing tools, Siri in the Camera (iOS 27, announced June 2026)
 - **iPhone Mirroring**, using your iPhone from your Mac, missing in the EU since 2024
 - **Visited Places and Preferred Routes** in Apple Maps (iOS 26)
 
-Others arrived months late: Apple Intelligence on iPhone (about six months), Live Translation with AirPods (three months).
+Others arrived months late for the same reason: Apple Intelligence on iPhone (about six months), Live Translation with AirPods (three months).
 
 Moving to the US brings them back. But switching your Apple Account to the US App Store has a cost of its own: any app the US store doesn't list can no longer be updated or reinstalled.
 
